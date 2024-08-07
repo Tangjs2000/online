@@ -1,0 +1,168 @@
+import {scrollButton} from "./chat";
+import {CHAT_MSG_PROCESS_CONSTANT} from "./chatMsgProcess";
+
+/*/!* 导出对外函数 *!/
+export const ChatMessage  {
+    buildHistoryDialog,
+    buildDialog
+}
+
+/!**
+ * 构建历史对话消息
+ *
+ * @param history
+ * @return {*}
+ *!/
+const buildHistoryDialog: ChatMessage = (history: ChatMsgHistory) => {
+    if (!history) return;
+
+    let dialog = null;
+    switch (history.role) {
+        case "seat": {
+            break;
+        }
+        case "visitor": {
+            let chatMsg = new ChatMsgV2();
+            chatMsg.msgId = history.msgId;
+            chatMsg.meetingId = history.meetingId;
+            chatMsg.hasSelf = true;
+            chatMsg.type = history.type;
+            chatMsg.content = history.contentH5;
+            chatMsg.personalId = history.personalId;
+            chatMsg.personalName = history.personalName;
+            chatMsg.datetime = history.datetime;
+            chatMsg.hasRead = history.hasRead;
+            dialog = visitorDialog(chatMsg);
+            break;
+        }
+        case "system": {
+            break;
+        }
+        case "robot": {
+            let chatMsg = new ChatMsgV2();
+            chatMsg.msgId = history.msgId;
+            chatMsg.meetingId = history.meetingId;
+            chatMsg.hasSelf = false;
+            chatMsg.type = history.type;
+            chatMsg.content = history.contentH5;
+            chatMsg.personalId = history.personalId;
+            chatMsg.personalName = history.personalName;
+            chatMsg.datetime = history.datetime;
+            chatMsg.hasRead = history.hasRead;
+            dialog = RobotDialog(chatMsg);
+            break;
+        }
+        default: {
+            console.error("未知的消息处理方案-消息内容：", history)
+        }
+    }
+    if (dialog) {
+        let historyChat = document.getElementById(`historyChat`);
+        let firstDocument = historyChat.firstChild;
+        if (firstDocument == null) {
+            historyChat.append(dialog);
+        } else {
+            /!* if (firstDocument.id !== CHAT_MSG_PROCESS_CONSTANT.no_history_message_id)
+                 firstDocument.before(dialog);*!/
+        }
+    }
+    return dialog;
+};
+
+/!**
+ * 构建即时对话消息
+ *
+ * @param chatMsg
+ * @return {*}
+ *!/
+const buildDialog: ChatMessage = (chatMsg: ChatMsgV2) => {
+    if (!chatMsg) return;
+
+    let dialog = null;
+    switch (chatMsg.role) {
+        case "seat": {
+            break;
+        }
+        case "visitor": {
+            dialog = visitorDialog(chatMsg);
+            break;
+        }
+        case "system": {
+            break;
+        }
+        case "robot": {
+            dialog = RobotDialog(chatMsg);
+            break;
+        }
+        default: {
+            console.error("未知的消息处理方案-消息内容：", chatMsg)
+        }
+    }
+    if (dialog) {
+        let newChat = document.getElementById(`newChat`);
+        newChat.appendChild(dialog);
+        scrollButton();
+    }
+    return dialog;
+};
+
+
+/!**
+ * 访客对话消息
+ * @author jiashuai.tang
+ * @since 2024/07/27
+ *!/
+const visitorDialog: ChatMessage = (chatMsg: ChatMsgV2) => {
+    let dialog = dialog.innerHTML = '<!-- 头像框 -->\n' +
+        '          <div class="other_constant" hidden></div>\n' +
+        '          <div class="messageCard ownMessageCard">\n' +
+        '           <div>' + chatMsg.content + '</div>\n' +
+        '          </div>\n' +
+        '          <div class="own_constant">' +
+        '           <img class="constant_img" src="' + chatMsg.avatar + '" alt=""/>' +
+        '          </div>';
+}
+
+/!**
+ * 机器人对话消息
+ * @author jiashuai.tang
+ * @since 2024/07/27
+ * @return
+ *!/
+const RobotDialog: ChatMessage = (chatMsg: ChatMsgV2) => {
+    let dialog = dialog.innerHTML = '<!-- 头像框 -->\n' +
+        '          <div class="other_constant">\n' +
+        '              <img class="constant_img" src="' + chatMsg.avatar + '" alt=""/>\n' +
+        '          </div>\n' +
+        '          <div class="messageCard otherMessageCard">\n' +
+        '           <div>' + chatMsg.content + '</div>\n' +
+        '          </div>\n' +
+        '          <div class="own_constant" hidden></div>';
+    return dialog;
+}
+
+/!**
+ * 坐席对话消息
+ * @author jiashuai.tang
+ * @since 2024/07/27
+ *!/
+const SeatDialog: ChatMessage = (chatMsg: ChatMsgV2) => {
+
+}
+
+/!**
+ * 系统对话消息
+ * @author jiashuai.tang
+ * @since 2024/07/27
+ *!/
+const SystemDialog: ChatMessage = (chatMsg: ChatMsgV2) => {
+
+}
+
+export function bulid(chat, hasHistory) {
+    if (hasHistory) {
+        buildHistoryDialog(chat);
+    } else {
+        buildDialog(chat);
+    }
+}*/

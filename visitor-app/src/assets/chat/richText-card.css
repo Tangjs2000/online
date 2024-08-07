@@ -1,0 +1,247 @@
+:root{
+  --message-card-background: #FFFFFF;
+  --message-card-hover-background: #EBEBEB;
+  --message-card-border-color: #FFFFFF;
+  --message-card-border-radius: 5px;
+  --message-card-padding: 5px;
+  --message-card-min-width: 20%;
+  --message-card-width: 200px;
+  --message-card-max-width: 220px;
+  --chat-card-item-row-gap: 5px;
+}
+
+/* 对话卡片 */
+.chatCard {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--chat-card-item-row-gap);
+
+}
+.chatCard.right{
+  right: calc(var(--message-card-it-size) + 3px);
+}
+
+.chatCard.left{
+  left: calc(var(--message-card-it-size) + 3px);
+}
+
+/* 系统消息卡片 */
+.systemCard{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
+
+/* 消息卡片 */
+.messageCard {
+  display: flex;
+  position: relative;
+}
+.messageCard.left{
+  justify-content: flex-start;
+  left: calc(var(--message-card-it-size) + 3px);
+}
+.messageCard.right {
+  justify-content: flex-end;
+  right: calc(var(--message-card-it-size) + 3px);
+}
+
+/* 文本|富文本消息内容样式 */
+/* 1、消息内容卡片 2、推荐问题列表 */
+.messageBody {
+  text-align: left;
+  background: var(--message-card-background);
+  font-family: "inherit";
+  /*width: var(--message-card-width);*/
+  min-width: var(--message-card-min-width);
+  max-width: var(--message-card-max-width);
+  min-height: var(--avatar-size);
+  display: block;
+  position: relative;
+  /* 边框圆角 */
+  border: var(--message-card-border-width) solid var(--message-card-border-color);
+  border-radius: var(--message-card-border-radius);
+  padding: var(--message-card-padding);
+}
+
+/* 设置英文自动换行 */
+.messageBody span {
+  word-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.2;
+
+}
+
+.messageBody p {
+  margin: 0;
+  word-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.messageBody img {
+  max-width: 100%;
+  object-fit: contain
+}
+
+.messageBody video {
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/*.videoPlayer {
+  width: 100%;
+  height: 100%;
+  background-image: url("/public/play.svg");
+  background-position: center; !* 图片居中 *!
+  background-repeat: no-repeat; !* 不平铺图片 *!
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 0;
+}
+.videoPlayer::after{
+
+}
+.videoPlayer.pause{
+
+}
+.videoPlayer.play{
+
+}*/
+
+.messageBody audio {
+  max-width: 100%;
+  object-fit: contain
+}
+
+.messageBody a {
+  color: #0B57D0;
+  target: '_blank';
+  text-decoration: underline;
+}
+
+.messageBody a:hover {
+  color: #315EFBFF;
+}
+
+/*.messageCard :hover{
+  background-color: var(--message-card-hover-background);
+}*/
+
+.messageBody.left {
+}
+
+.messageBody.right {
+}
+
+.messageBody.left::before { /* 三角标 */
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  left: calc(0px - var(--message-card-it-size) * 2);
+  border-color: transparent var(--message-card-border-color) transparent transparent;
+}
+
+.messageBody.left::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  left: calc(var(--message-card-border-width) - var(--message-card-it-size) * 2);
+  border-color: transparent var(--message-card-background) transparent transparent;
+}
+
+.messageBody.right::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  right: calc(0px - var(--message-card-it-size) * 2);
+  border-color: transparent transparent transparent var(--message-card-border-color);
+}
+
+.messageBody.right::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  right: calc(var(--message-card-border-width) - var(--message-card-it-size) * 2);
+  border-color: transparent transparent transparent var(--message-card-border-color);
+}
+
+
+/* 推荐问题列表 */
+.recommend {
+  padding-top: 10px;
+}
+
+.recommend ol {
+  padding-left: 18px;
+  margin: 2px 0
+}
+
+.recommend li {
+  color: var(--basic-color-tone);
+}
+
+.recommend li:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+
+}
+
+/* 推荐问题列表选中样式 */
+.recommend-selected {
+  background-color: var(--basic-color-tone);
+}
+
+/* 折叠基础样式 */
+.collapse-base {
+  width: 100%;
+  height: 100px;
+}
+/* 折叠样式 */
+.collapse {
+  width: 100%;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-color 0.3s ease-out;
+  background-image: url('/public/collapse.svg');
+}
+
+/* 展开样式 */
+.expand {
+  width: 100%;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-color 0.3s ease-out;
+  box-shadow: 0 -2.933333333vw 3.733333333vw 1.866666667vw #fff;
+  background-image: url('/public/expand.svg')
+}
+
+/* 是否已读标识 */
+.read{
+  align-self: flex-end;
+  margin: 0 8px;
+  width: 20px;
+  height: 20px;
+  background-image: url('/public/svg/online/read.svg')
+}
+
+.noRead{
+  align-self: flex-end;
+  margin: 0 8px;
+  width: 20px;
+  height: 20px;
+  background-image: url('/public/svg/online/unRead.svg')
+}

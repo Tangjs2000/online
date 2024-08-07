@@ -1,0 +1,102 @@
+/* 语音消息内容样式 */
+.wavCard {
+  min-width: var(--wav-card-min-width);
+  max-width: var(--wav-card-man-width);
+  height: var(--wav-card-height);
+  background: var(--message-card-background);
+  border: var(--message-card-border-width) solid var(--message-card-border-color);
+  border-radius: 5px; /* 边框圆角 */
+  position: relative;
+  display: inline-block;
+  top: var(--other-constant-margin-top);
+  text-align: left;
+  margin-bottom: 10px;
+  width: 20%;
+  /*left: calc(50% - var(--other-constant-width) - var(--message-card-it-size) - 10%);*/
+}
+
+.wavCardV2 {
+  min-width: 75px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.wavSvg {
+  width: var(--wav-svg-side);
+  height: var(--wav-svg-side);
+  /*position: relative;
+  top: calc((var(--wav-card-height) - var(--wav-svg-side) - var(--message-card-border-width) * 2) / 2);
+  left: 5px;*/
+}
+.wavSvg.right{
+  background-image: url("/public/wav_right.svg");
+}
+.wavSvg.left{
+  background-image: url("/public/wav_left.svg");
+}
+.wavSvg path {
+  fill: var(--basic-color-tone);
+}
+
+.wavDuration {
+  color: var(--basic-color-tone);
+  position: relative;
+  left: 10px;
+}
+
+.otherWavCard {
+}
+
+.ownWavCard {
+}
+
+/* 三角标 */
+.ownWavCard::before {
+  content: ""; /* 伪元素需要内容，即使它是空的 */
+  width: 0; /* 设置宽度为0 */
+  height: 0; /* 设置高度为0 */
+  border: var(--message-card-it-size) solid; /* 设置边框宽度 */
+  position: absolute; /* 脱离文档流进行定位 */
+  right: calc(0px - var(--message-card-it-size) * 2); /* 将伪元素定位到 div 的右侧 */
+  border-color: transparent transparent transparent var(--message-card-border-color); /* 设置边框颜色，右侧为黑色 */
+  top: 50%; /* 垂直居中 */
+  transform: translateY(-50%); /* 向上移动自身高度的一半，实现垂直居中 */
+}
+
+.ownWavCard::after {
+  content: ""; /* 伪元素需要内容，即使它是空的 */
+  width: 0; /* 设置宽度为0 */
+  height: 0; /* 设置高度为0 */
+  border: var(--message-card-it-size) solid; /* 设置边框宽度 */
+  position: absolute; /* 脱离文档流进行定位 */
+  right: calc(var(--message-card-border-width) - var(--message-card-it-size) * 2); /* 将伪元素定位到 div 的右侧 */
+  border-color: transparent transparent transparent var(--message-card-background); /* 设置边框颜色，右侧为黑色 */
+  top: 50%; /* 垂直居中 */
+  transform: translateY(-50%); /* 向上移动自身高度的一半，实现垂直居中 */
+
+}
+
+.otherWavCard::before {
+  content: ""; /* 伪元素需要内容，即使它是空的 */
+  width: 0; /* 设置宽度为0 */
+  height: 0; /* 设置高度为0 */
+  border: var(--message-card-it-size) solid; /* 设置边框宽度 */
+  position: absolute; /* 脱离文档流进行定位 */
+  left: calc(0px - var(--message-card-it-size) * 2); /* 将伪元素定位到 div 的右侧 */
+  border-color: transparent var(--message-card-border-color) transparent transparent; /* 设置边框颜色，右侧为黑色 */
+  top: 50%; /* 垂直居中 */
+  transform: translateY(-50%); /* 向上移动自身高度的一半，实现垂直居中 */
+}
+
+.otherWavCard::after {
+  content: ""; /* 伪元素需要内容，即使它是空的 */
+  width: 0; /* 设置宽度为0 */
+  height: 0; /* 设置高度为0 */
+  border: var(--message-card-it-size) solid; /* 设置边框宽度 */
+  position: absolute; /* 脱离文档流进行定位 */
+  left: calc(var(--message-card-border-width) - var(--message-card-it-size) * 2); /* 将伪元素定位到 div 的右侧 */
+  border-color: transparent var(--message-card-background) transparent transparent; /* 设置边框颜色，右侧为黑色 */
+  top: 50%; /* 垂直居中 */
+  transform: translateY(-50%); /* 向上移动自身高度的一半，实现垂直居中 */
+}

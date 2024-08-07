@@ -1,0 +1,159 @@
+/* 文本|富文本消息内容样式 */
+/* 1、消息内容卡片 2、推荐问题列表 */
+.messageCard {
+  text-align: left;
+  background: var(--message-card-background);
+  font-family: "inherit";
+  max-width: var(--message-card-width);
+  /*min-width: var(--message-card-min-width);*/
+  min-height: calc(var(--own-constant-width) + var(--other-constant-margin-top));
+  display: block;
+  left: calc(var(--other-constant-width) + var(--message-card-it-size));
+  position: relative;
+  /* 边框圆角 */
+  border: var(--message-card-border-width) solid var(--message-card-border-color);
+  border-radius: 5px;
+  padding: 5px 5px 5px 5px;
+}
+
+/* 设置英文自动换行 */
+.messageCard span {
+  word-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.2;
+
+}
+
+.messageCard p {
+  margin: 0;
+  word-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.messageCard img {
+  max-width: 100%;
+  object-fit: contain
+}
+
+.messageCard video {
+  max-width: 100%;
+  object-fit: contain
+}
+
+.messageCard a {
+  color: #0B57D0;
+  target: '_blank';
+  text-decoration: underline;
+}
+
+.messageCard a:hover {
+  color: #315EFBFF;
+}
+
+.otherMessageCard {
+}
+
+.ownMessageCard {
+  position: relative;
+  margin-left: var(--own-message-card-margin-left);
+}
+
+.otherMessageCard::before { /* 三角标 */
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  left: calc(0px - var(--message-card-it-size) * 2);
+  border-color: transparent var(--message-card-border-color) transparent transparent;
+}
+
+.otherMessageCard::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  left: calc(var(--message-card-border-width) - var(--message-card-it-size) * 2);
+  border-color: transparent var(--message-card-background) transparent transparent;
+}
+
+.ownMessageCard::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  right: calc(0px - var(--message-card-it-size) * 2);
+  border-color: transparent transparent transparent var(--message-card-border-color);
+}
+
+.ownMessageCard::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  right: calc(var(--message-card-border-width) - var(--message-card-it-size) * 2);
+  border-color: transparent transparent transparent var(--message-card-background);
+}
+
+
+/* 推荐问题列表 */
+.recommend {
+  padding-top: 10px;
+}
+
+.recommend ol {
+  padding-left: 18px;
+  margin: 2px 0
+}
+
+.recommend li {
+  color: var(--basic-color-tone);
+}
+
+.recommend li:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+
+}
+
+/* 推荐问题列表选中样式 */
+.recommend-selected {
+  background-color: var(--basic-color-tone);
+}
+
+/* 折叠基础样式 */
+.collapse-base {
+  width: 100%;
+  max-height: 100px;
+}
+/* 折叠样式 */
+.collapse {
+  /*display: block;*/
+  width: 100%;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-color 0.3s ease-out;
+  /*box-shadow: 0 -2.933333333vw 3.733333333vw 1.866666667vw #fff;*/
+  background-image: url('/public/collapse.svg');
+}
+
+/* 展开样式 */
+.expand {
+  /*display: block;*/
+  width: 100%;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-color 0.3s ease-out;
+  box-shadow: 0 -2.933333333vw 3.733333333vw 1.866666667vw #fff;
+  background-image: url('/public/expand.svg')
+}
+

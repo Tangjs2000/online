@@ -1,0 +1,75 @@
+/* 文件资源卡片样式 */
+:root {
+    --file-card-width: 100%;
+    --file-card-height: 70px;
+    --file-card-padding: 5px;
+    --file-card-svg-width: 65px;
+
+}
+
+.fileCard {
+    width: 100%;
+    height: var(--file-card-height);
+    padding: var(--file-card-padding);
+    position: relative;
+    display: flex;
+    align-items: center; /* 水平居中对齐项目 */
+}
+
+.fileCardSvg {
+    width: var(--file-card-svg-width);
+    height: 100%;
+    display: flex;
+    align-items: center; /* 水平居中对齐项目 */
+}
+
+.fileCardInfo {
+    width: 100%;
+    max-width: 110px;
+    height: 100%;
+    padding: var(--file-card-padding) var(--file-card-padding) var(--file-card-padding) 10px;
+}
+
+.fileCardName {
+    font-size: 17px;
+    max-width: 100%;
+    overflow: hidden; /* 确保内容超出元素框时会被裁剪 */
+    white-space: nowrap; /* 确保内容在一行内显示 */
+    text-overflow: ellipsis; /* 使用省略号表示被裁剪的文本 */
+}
+
+.fileCardOther {
+    width: 100%;
+    display: flex;
+    align-items: center; /* 垂直水平居中对齐 */
+    justify-content: space-between; /* 水平两端对齐 */
+}
+
+.fileCardSize {
+    color: #8d8b8b;
+    text-align: left;
+}
+
+.fileCardOption {
+    max-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center; /* 水平居中对齐项目 */
+}
+
+.fileCardOption svg {
+    margin: 0 8px;
+}
+
+
+.zoomable-image{
+    transition: transform 0.5s ease;
+    cursor: pointer;
+}
+.zoomed {
+    transform: scale(2);
+    z-index: 9999;
+}
+
+
+

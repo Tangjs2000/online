@@ -1,0 +1,167 @@
+.toolbar {
+    background: var(--basic-color-tone);
+    width: 100%;
+    height: var(--toolbar-height, 60px);
+    position: absolute;
+    bottom: 0;
+    border-top: 1px #F1F3F4;
+    /*top: calc(var(--toolbar-height, 60px) + 8px);
+    height: var(--toolbar-height, 60px);
+    position: relative;*/
+    text-align: left;
+    padding: calc((var(--toolbar-height) - var(--toolbar-inner-line-height)) / 2) 3px calc((var(--toolbar-height) - var(--toolbar-inner-line-height)) / 2) 3px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+}
+
+/* 工具栏-(输入框、语音条转换按钮) */
+.inputSwitch {
+    display: block;
+    width: var(--toolbar-inner-line-height);
+    height: var(--toolbar-inner-line-height);
+    border-radius: var(--toolbar-inner-line-height);
+    color: var(--basic-color-tone);
+    background-color: #FFFFFF;
+    /*background-color: transparent;*/
+}
+
+/* 工具栏-输入框 */
+.input {
+    flex: 1;
+    min-height: 100%;
+}
+
+/* 工具栏-文本输入框 */
+.textInput {
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    border: 1px;
+    max-lines: 10;
+    width: 100%;
+    height: var(--toolbar-inner-line-height);
+    word-wrap: break-word;
+}
+
+/* 工具栏-语音输入框 */
+.voiceInput {
+    background-color: #FFFFFF;
+    border-radius: 30px;
+    border: 1px;
+    width: 100%;
+    height: var(--toolbar-inner-line-height);
+}
+
+/* 工具栏-发送按钮 */
+.sendButton {
+    background: var(--icon-basic-color-tone);
+    width: var(--toolbar-send-button-width);
+    height: var(--toolbar-inner-line-height);
+    padding: 1px 0px 1px 0px;
+    position: absolute;
+    /*float: bottom;*/
+    right: var(--toolbar-left-right-padding);
+    bottom: calc((var(--toolbar-height) - var(--toolbar-inner-line-height)) / 2);
+    border: 0;
+    border-radius: 5px;
+    /* 字体设置 */
+    color: var(--basic-color-tone);
+}
+
+/* 输入切换按钮图标 */
+.inputSwitchIcon {
+    width: 100%;
+    height: 100%;
+}
+
+.inputSwitchIcon path {
+    fill: var(--basic-color-tone);
+}
+
+/* 组件工具弹出按钮 */
+.unitTool {
+    width: var(--toolbar-inner-line-height);
+    height: var(--toolbar-inner-line-height);
+    padding: 1px 0px 1px 0px;
+    position: absolute;
+    /*float: bottom;*/
+    right: var(--toolbar-left-right-padding);
+    bottom: calc((var(--toolbar-height) - var(--toolbar-inner-line-height)) / 2);
+    border: 0;
+    border-radius: var(--toolbar-inner-line-height);
+    /* 字体设置 */
+    color: var(--basic-color-tone);
+}
+
+.unitTool svg {
+    width: var(--toolbar-inner-line-height);
+    height: var(--toolbar-inner-line-height);
+}
+
+.unitTool path {
+    fill: var(--basic-color-tone);
+}
+
+
+:root {
+    --unit-bar-height: 170px
+}
+
+/* 组件 */
+.unitBar {
+    width: 100%;
+    height: var(--unit-bar-height);
+    max-height: var(--unit-bar-height);
+    background-color: #C4E1C5;
+    position: absolute;
+    bottom: 0;
+    padding: 10px 16px;
+    /*justify-content: space-between;*/
+    /*align-items: flex-start; !* 项目向交叉轴的起始位置对齐 *!*/
+
+    /* 抽屉样式 */
+    transition: transform 0.5s ease-out;
+    transform: translateY(0);
+
+    /* 响应式布局 */
+    /*display: flex;
+    flex-wrap: wrap;
+    flex-direction: row; !* 主轴方向为水平，从左到右 *!
+    justify-content: left; !* 项目向主轴的起始位置对齐 *!*/
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+
+
+}
+
+.unit {
+    background-color: #C4E1C5;
+    width: 55px;
+    height: 70px;
+    padding: 5px;
+    margin: 0 10px;
+    position: relative;
+    text-align: center;
+}
+
+.unit button {
+    width: 44px;
+    height: 44px;
+    background-color: #F7FBF1;
+    border: 0;
+    border-radius: 6px;
+}
+
+.unit p {
+    width: 100%;
+    font-weight: bold;
+    font-size: 11px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+
+

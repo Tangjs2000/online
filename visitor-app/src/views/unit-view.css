@@ -1,0 +1,50 @@
+:root {
+    --tool-space-height: 55px;
+    --oem-space-height: 55px;
+}
+
+/* unit-body */
+.unit-body {
+    height: 100vh;
+    /*background-color: #E4E7ED;*/
+    background-color: #C4E1C5;
+}
+
+/* 工具位 */
+.tool-space {
+    height: 55px;
+    box-shadow: 0 8px 5px rgba(0, 0, 0, 0.15);
+}
+
+.tool-space div {
+    flex-grow: 1;
+}
+
+/* 内容位 */
+.content-space {
+    min-height: calc(100% - var(--tool-space-height) - var(--oem-space-height));
+    display: grid;
+    place-items: center;
+    /*background-color: #C4E1C5;*/
+}
+
+/* 广告位 */
+.ad-space {
+    background-color: #8d8b8b;
+    margin-left: 50px;
+}
+
+/* 版权位 */
+.oem-space {
+    background-color: #C4E1C5;
+    height: var(--oem-space-height);
+    display: grid;
+    place-items: center;
+    /* 卡片阴影效果 */
+    box-shadow: 0 -3px 5px rgba(0, 0, 0, 0.15);
+    bottom: 0;
+    /* 添加下划线 */
+    /*text-decoration: underline;*/
+    /* 添加小手样式 */
+    /*cursor: pointer;*/
+}

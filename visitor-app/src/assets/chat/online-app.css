@@ -1,0 +1,197 @@
+:root {
+    --toolbar-height: 50px;
+    --toolbar-inner-line-height: 36px;
+    --toolbar-left-right-padding: 5px;
+    --topicBar-height: 50px;
+    --topicbar-padding-top: 5px;
+    --topicbar-padding-left: 10px;
+    --toolbar-send-button-width: 60px;
+    --other-constant-width: 30px;
+    --own-constant-width: 30px;
+    --avatar-size: 35px;
+    --message-card-border-color: var(--basic-color-tone);
+    /*--message-card-background: #95EC69;*/
+    --message-card-width-scale: 0.45;
+    --message-card-width: calc((100% - var(--other-constant-width) - var(--own-constant-width) - var(--message-card-margin)) * var(--message-card-width-scale));
+    --message-card-min-width: 30px;
+    --message-card-background: #FFFFFF;
+    --message-card-border-width: 2px;
+    --audio-message-card-border-width: 10px;
+    --message-card-margin: 23px;
+    --own-message-card-margin-left: calc(100% - var(--own-constant-width) - var(--other-constant-width) - (var(--message-card-it-size) * 2) - var(--message-card-width));
+    --other-constant-margin-top: 10px;
+    --own-constant-margin-top: 10px;
+    --message-card-it-size: 8px; /* 消息指示三角大小 */
+    --message-card-font-size: 10px;
+    --basic-color-tone: #C02C38; /* 整体基础色调 */
+    --icon-basic-color-tone: #FCFCFC; /* 图标背景基础色调 */
+
+    --bubble-bar--height: 30px;
+
+    /* 语音消息 */
+    --wav-card-height: 30px;
+    --wav-card-min-width: 80px;
+    --wav-card-man-width: 50%;
+    --wav-svg-side: 20px;
+}
+
+/* 分割线 */
+.cross-mark{
+    display: flex;
+    width: 85%;
+}
+.cross-mark::before,
+.cross-mark::after{
+    content: '';
+    flex: 1 1;
+    border-bottom: 2px dashed #000000;
+    margin:auto;
+}
+
+.appBar {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    /*display: flex;*/
+}
+
+.dialogBox {
+    flex: 0.8;
+}
+
+.informationBox {
+    background: var(--basic-color-tone);
+    min-width: 0;
+    flex: 0.2;
+}
+
+
+.dialogMsgBar {
+    background: #F5F5F5;
+    /*background: var(--icon-basic-color-tone);*/
+    width: 100%;
+    position: absolute;
+    top: var(--topicBar-height);
+    height: calc(100% - var(--topicBar-height, 60px) - var(--toolbar-height, 60px) - var(--bubble-bar--height, 30px));
+
+    /* 保证内容不超出盒子 */
+    /*direction: ltr;*/
+    overflow-y: auto;
+}
+
+/* 针对Webkit浏览器隐藏滚动条 */
+.dialogMsgBar::-webkit-scrollbar {
+    display: none;
+}
+
+/* 对话消息 */
+.dialog {
+    margin-top: 3px;
+    margin-bottom: 7px;
+    position: relative;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    align-items: center;
+}
+.dialogV2 {
+    margin-top: 3px;
+    margin-bottom: 7px;
+    padding: 0 8px;
+    display: flex;
+    align-items: flex-start;
+
+
+
+    /*position: relative;
+    margin-left: 5px;
+    margin-right: 5px;*/
+
+}
+.dialogV2.left{
+    justify-content: flex-start;
+}
+.dialogV2.right{
+    justify-content: flex-end;
+}
+
+.dialogV2 button{
+    background-color: transparent;
+    color: #000000;
+    border: 0;
+}
+
+.dialog button {
+    background-color: transparent;
+    color: #000000;
+    border: 0;
+}
+
+.video-play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    padding: 16px;
+    color: white;
+    cursor: pointer;
+}
+
+.video-play-button i {
+    font-size: 24px;
+}
+
+.other_constant {
+    width: var(--other-constant-width);
+    height: var(--own-constant-width);
+    min-height: var(--other-constant-width);
+    /*background: red;*/
+    display: inline-block;
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    margin-top: var(--other-constant-margin-top);
+}
+
+.own_constant {
+    width: var(--own-constant-width);
+    line-height: 100%;
+    height: var(--own-constant-width);
+    min-height: var(--own-constant-width);
+    font-size: var(--message-card-font-size);
+    display: inline-block;
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    right: 0;
+    margin-top: var(--own-constant-margin-top);
+}
+
+.constant_img {
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+.sys_notice {
+    position: sticky;
+    width: 100%;
+    height: 30px;
+}
+
+.replayContent {
+    overflow: hidden;
+    /*max-height: 100px; !* 设定最大高度，超出部分将会被隐藏 *!*/
+    transition: max-height 0.3s ease-out; /* 添加过渡效果 */
+}
+.replayContent.collapsed {
+    max-height: 80px; /* 当折叠时，最大高度设置为0 */
+}
+

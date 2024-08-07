@@ -1,0 +1,214 @@
+:root{
+  --message-card-background: #FFFFFF;
+  --message-card-hover-background: #EBEBEB;
+  --message-card-border-color: #FFFFFF;
+  --message-card-border-radius: 5px;
+  --message-card-padding: 5px;
+  --message-card-min-width: 20%;
+  --message-card-width: 200px;
+  --message-card-max-width: 220px;
+}
+
+/* 对话内容 */
+.chatBody {
+  display: flex;
+  flex-direction: column;
+
+}
+.chatBody.right{
+  right: calc(var(--message-card-it-size) + 3px);
+}
+
+.chatBody.left{
+  left: calc(var(--message-card-it-size) + 3px);
+}
+
+
+/* 对话卡片 */
+.chatCard {
+  display: flex;
+  position: relative;
+}
+.chatCard.left{
+  justify-content: flex-start;
+  left: calc(var(--message-card-it-size) + 3px);
+}
+.chatCard.right {
+  justify-content: flex-end;
+  right: calc(var(--message-card-it-size) + 3px);
+}
+
+/* 文本|富文本消息内容样式 */
+/* 1、消息内容卡片 2、推荐问题列表 */
+.messageCard {
+  text-align: left;
+  background: var(--message-card-background);
+  font-family: "inherit";
+  /*width: var(--message-card-width);*/
+  min-width: var(--message-card-min-width);
+  max-width: var(--message-card-max-width);
+  min-height: var(--avatar-size);
+  display: block;
+  position: relative;
+  /* 边框圆角 */
+  border: var(--message-card-border-width) solid var(--message-card-border-color);
+  border-radius: var(--message-card-border-radius);
+  padding: var(--message-card-padding);
+}
+
+/* 设置英文自动换行 */
+.messageCard span {
+  word-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.2;
+
+}
+
+.messageCard p {
+  margin: 0;
+  word-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.messageCard img {
+  max-width: 100%;
+  object-fit: contain
+}
+
+.messageCard video {
+  max-width: 100%;
+  object-fit: contain
+}
+
+.messageCard a {
+  color: #0B57D0;
+  target: '_blank';
+  text-decoration: underline;
+}
+
+.messageCard a:hover {
+  color: #315EFBFF;
+}
+
+/*.messageCard :hover{
+  background-color: var(--message-card-hover-background);
+}*/
+
+.messageCard.left {
+}
+
+.messageCard.right {
+}
+
+.messageCard.left::before { /* 三角标 */
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  left: calc(0px - var(--message-card-it-size) * 2);
+  border-color: transparent var(--message-card-border-color) transparent transparent;
+}
+
+.messageCard.left::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  left: calc(var(--message-card-border-width) - var(--message-card-it-size) * 2);
+  border-color: transparent var(--message-card-background) transparent transparent;
+}
+
+.messageCard.right::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  right: calc(0px - var(--message-card-it-size) * 2);
+  border-color: transparent transparent transparent var(--message-card-border-color);
+}
+
+.messageCard.right::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border: var(--message-card-it-size) solid;
+  position: absolute;
+  top: var(--own-constant-margin-top);
+  right: calc(var(--message-card-border-width) - var(--message-card-it-size) * 2);
+  border-color: transparent transparent transparent var(--message-card-border-color);
+}
+
+
+/* 推荐问题列表 */
+.recommend {
+  padding-top: 10px;
+}
+
+.recommend ol {
+  padding-left: 18px;
+  margin: 2px 0
+}
+
+.recommend li {
+  color: var(--basic-color-tone);
+}
+
+.recommend li:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+
+}
+
+/* 推荐问题列表选中样式 */
+.recommend-selected {
+  background-color: var(--basic-color-tone);
+}
+
+/* 折叠基础样式 */
+.collapse-base {
+  width: 100%;
+  height: 100px;
+}
+/* 折叠样式 */
+.collapse {
+  width: 100%;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-color 0.3s ease-out;
+  background-image: url('/public/collapse.svg');
+}
+
+/* 展开样式 */
+.expand {
+  width: 100%;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-color 0.3s ease-out;
+  box-shadow: 0 -2.933333333vw 3.733333333vw 1.866666667vw #fff;
+  background-image: url('/public/expand.svg')
+}
+
+/* 是否已读标识 */
+.read{
+  align-self: flex-end;
+  margin: 0 8px;
+  width: 20px;
+  height: 20px;
+  background-image: url('/public/svg/online/read.svg')
+}
+
+.noRead{
+  align-self: flex-end;
+  margin: 0 8px;
+  width: 20px;
+  height: 20px;
+  background-image: url('/public/svg/online/unRead.svg')
+}

@@ -1,0 +1,58 @@
+.emojiBar{
+    width: 100%;
+    height: 190px;
+    max-height: 190px;
+    background-color: #C4E1C5;
+    position: absolute;
+    bottom: 0;
+    /*padding: 0px 10px;*/
+
+    /* 抽屉样式 */
+    transition: transform 0.5s ease-out;
+    transform: translateY(0);
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+/* 表情包分组选项卡 */
+.emojiTab{
+    height: 36px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    column-gap: 10px;
+    align-items: center;
+    justify-items: center;
+    padding: 0 10px;
+    margin: 0 0 5px 0;
+    background-color: var(--basic-color-tone);
+}
+.emojiTab-item{
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+}
+.emojiTab-item:hover{
+    background-color: #FFFFFF;
+}
+
+.emojiBody{
+    /* 响应式布局 */
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    justify-items: center;
+    align-items: center;
+    padding: 0 10px 8px 10px;
+}
+.emojiBody img{
+    width: 34px;
+    height: 34px;
+}
+
+.emojiBody img:hover{
+    background-color: #F2F2F2;
+    border-radius: 5px;
+}
