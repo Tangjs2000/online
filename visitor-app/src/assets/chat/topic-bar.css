@@ -5,7 +5,7 @@
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     padding: var(--topicbar-padding-top) var(--topicbar-padding-left);
-    position: absolute;
+    /*position: absolute;*/
     /* 内部元素垂直居中 */
     display: flex;
     align-items: center;

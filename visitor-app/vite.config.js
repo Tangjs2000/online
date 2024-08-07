@@ -17,8 +17,8 @@ export default defineConfig({
         // VueDevTools(),
         viteVConsole({
             entry: path.resolve('src/main.js'), // 入口文件，或者可以使用这个配置: [path.resolve('src/main.js')]
-            localEnabled: true, // 本地是否启用
-            enabled: true, // 是否启用
+            localEnabled: false, // 本地是否启用
+            enabled: false, // 是否启用
             config: {
                 maxLogNumber: 1000,
                 theme: 'light' // 主题颜色 'dark'|'light'
@@ -41,8 +41,8 @@ export default defineConfig({
         },
         proxy: {            // 代理
             "/online": {
-                target: `http://127.0.0.1:8088`,
-                // target: `http://47.120.74.142:441`,
+                // target: `http://127.0.0.1:8088`,
+                target: `http://47.120.74.142:441`,
                 changeOrigin: true,
                 ws: true,
                 logLevel: "debug",

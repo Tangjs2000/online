@@ -202,6 +202,87 @@ export class ChatImpl implements Chat {
 export const chatService = new ChatImpl();
 
 /**
+ * 表情包处理服务
+ *
+ * @author jiashuai.tang
+ * @since 2024/08/08
+ */
+export interface EmojiService{
+}
+export class EmojiServiceImpl implements EmojiService{
+    /* 初始化表情包 */
+    initEmoji(){
+        /* 清除表情包选项卡 */
+        let emojiTabDiv = document.getElementById(`emojiTab`);
+        while (emojiTabDiv.firstChild) {
+            emojiTabDiv.removeChild(emojiTabDiv.firstChild);
+        }
+        /* 初始化表情包选项卡 */
+        const emojiTabs = [
+            {
+                "type": "default",
+                "name": "search",
+            },
+            {
+                "type": "default",
+                "name": "default",
+            },
+            {
+                "type": "custom",
+                "name": "custom_new240807",
+            },
+        ];
+        if (emojiTabs?.length > 0) {
+            let defaultEmoji = undefined;
+            let that = this;
+            for (let item of emojiTabs) {
+                let emojiTab = document.createElement(`img`);
+                emojiTab.src = "/emoji/group_" + item.name + ".svg"
+                emojiTab.classList.add("emojiTab-item");
+                emojiTab.addEventListener("click", ()=>{
+                    that.emojiTabSwitch(EmojiTab.default)
+                })
+                emojiTabDiv.appendChild(emojiTab);
+                if (EmojiTab.default === item.type && "default" === item.name){
+                    that.emojiTabSwitch(EmojiTab.default)
+                }
+            }
+        }
+    }
+    /* 切换表情包选项卡 */
+    emojiTabSwitch(emojiTab){
+        let that = this;
+        const emojiDefault = ["yyds","亲亲", "便便", "分裂", "发呆", "发烧", "口水", "口罩", "可怜", "叹气", "吃瓜",
+            "吐", "咒骂", "大哭", "大笑", "奋斗", "害羞", "尴尬", "庆祝", "彩虹马", "微笑", "思考", "惊讶","感到鸭力","晕",
+            "暗中观察", "柠檬精", "炸弹", "生气", "疑问", "白眼", "睡觉", "石化", "笑哭", "调皮", "酷", "闭嘴", "骷髅",
+            "黑脸", "鼓掌"];
+
+        /* 清除表情包历史 */
+        let emojiBody = document.getElementById("emojiBody");
+        while (emojiBody.firstChild) {
+            emojiBody.removeChild(emojiBody.firstChild);
+        }
+
+        /* 添加表情包 */
+        if (EmojiTab.default === emojiTab && emojiDefault.length > 0) {
+            for (let emojiName of emojiDefault) {
+                let element = document.createElement(`img`)
+                element.src = "/emoji/default/" + emojiName + ".png";
+                element.width = 34;
+                element.height = 34;
+                element.alt = emojiName;
+                element.addEventListener("click",()=>{
+                    chatService.sendRichText(element.outerHTML, ChatScene.robot);
+                })
+                emojiBody.appendChild(element);
+            }
+        }
+    }
+}
+export const emojiService = new EmojiServiceImpl();
+
+
+/**
  * 聊天场景
  *
  * @author jiashuai.tang
@@ -282,4 +363,12 @@ export enum EmojiTab{
     default="default",
     /* 自定义 */
     custom="custom"
+}
+
+/**
+ * 工具单元模块
+ */
+export enum UnitModule{
+    extend = "extend",
+    emoji = "emoji"
 }

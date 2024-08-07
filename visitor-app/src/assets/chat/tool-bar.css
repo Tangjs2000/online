@@ -2,8 +2,8 @@
     background: var(--basic-color-tone);
     width: 100%;
     height: var(--toolbar-height, 60px);
-    position: absolute;
-    bottom: 0;
+    /*position: absolute;*/
+    /*bottom: 0;*/
     border-top: 1px #F1F3F4;
     /*top: calc(var(--toolbar-height, 60px) + 8px);
     height: var(--toolbar-height, 60px);
@@ -114,16 +114,21 @@
     width: 100%;
     height: var(--unit-bar-height);
     max-height: var(--unit-bar-height);
-    background-color: #C4E1C5;
-    position: absolute;
-    bottom: 0;
-    padding: 10px 16px;
-    /*justify-content: space-between;*/
-    /*align-items: flex-start; !* 项目向交叉轴的起始位置对齐 *!*/
-
     /* 抽屉样式 */
     transition: transform 0.5s ease-out;
     transform: translateY(0);
+    display: flex;
+    flex-direction: column;
+}
+
+.extendUnit{
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    background-color: #C4E1C5;
+    padding: 10px 16px;
+    /*justify-content: space-between;*/
+    /*align-items: flex-start; !* 项目向交叉轴的起始位置对齐 *!*/
 
     /* 响应式布局 */
     /*display: flex;
@@ -133,7 +138,9 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
+}
 
+.extendUnit{
 
 }
 
