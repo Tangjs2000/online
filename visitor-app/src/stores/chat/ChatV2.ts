@@ -272,7 +272,12 @@ export class EmojiServiceImpl implements EmojiService{
                 element.height = 34;
                 element.alt = emojiName;
                 element.addEventListener("click",()=>{
-                    chatService.sendRichText(element.outerHTML, ChatScene.robot);
+                    /*  */
+                    let textInput = document.getElementById(`textInput`);
+                    textInput.value += element.outerHTML;
+                    // textInput.appendChild(element);
+                    // textInput.innerHTML = textInput.innerHTML + element.outerHTML;
+                    // chatService.sendRichText(element.outerHTML, ChatScene.robot);
                 })
                 emojiBody.appendChild(element);
             }
@@ -371,4 +376,12 @@ export enum EmojiTab{
 export enum UnitModule{
     extend = "extend",
     emoji = "emoji"
+}
+
+/**
+ * 输入方式
+ */
+export enum InputMode{
+    speak="speak",
+    keyboard="keyboard"
 }

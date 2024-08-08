@@ -22,7 +22,7 @@
     display: block;
     width: var(--toolbar-inner-line-height);
     height: var(--toolbar-inner-line-height);
-    border-radius: var(--toolbar-inner-line-height);
+    border-radius: 100%;
     color: var(--basic-color-tone);
     background-color: #FFFFFF;
     /*background-color: transparent;*/
@@ -32,6 +32,9 @@
 .input {
     flex: 1;
     min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-items: center;
 }
 
 /* 工具栏-文本输入框 */
@@ -60,7 +63,7 @@
     width: var(--toolbar-send-button-width);
     height: var(--toolbar-inner-line-height);
     padding: 1px 0px 1px 0px;
-    position: absolute;
+    /*position: absolute;*/
     /*float: bottom;*/
     right: var(--toolbar-left-right-padding);
     bottom: calc((var(--toolbar-height) - var(--toolbar-inner-line-height)) / 2);

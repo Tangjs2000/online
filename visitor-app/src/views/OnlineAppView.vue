@@ -52,29 +52,25 @@
         <!-- 工具栏 -->
         <div id="toolbar" class="toolbar">
             <i id="inputSwitch" class="inputSwitch recordMess" @click="inputSwitch">
-            <svg v-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT" viewBox="0 0 1024 1024"
-                 class="inputSwitchIcon">
-              <path
-                  d="M512 1.181538C229.612308 1.181538 0.787692 230.006154 0.787692 512.393846 0.787692 795.175385 229.612308 1024 512 1024c282.387692 0 511.212308-228.824615 511.212308-511.212308C1023.212308 230.006154 794.387692 1.181538 512 1.181538m0 73.255385c241.821538 0 438.350769 196.529231 438.350769 438.350769S753.821538 951.138462 512 951.138462c-241.821538 0-438.350769-196.529231-438.350769-438.35077S270.178462 74.436923 512 74.436923m94.916923 715.618462c-14.572308 0-27.963077-9.058462-33.870769-22.449231a37.139692 37.139692 0 0 1 7.876923-39.778462 302.316308 302.316308 0 0 0 89.009231-215.433846c0-81.132308-31.507692-157.932308-89.009231-215.433846a36.391385 36.391385 0 0 1 1.181538-50.806154c13.784615-13.784615 36.233846-14.178462 50.806154-1.181538A376.359385 376.359385 0 0 1 743.581538 512c0.393846 100.036923-39.384615 196.135385-110.670769 267.027692-7.089231 7.483077-16.147692 11.027692-25.993846 11.027693m-127.606154-103.187693c-14.572308 0-27.963077-9.058462-33.870769-22.44923a37.139692 37.139692 0 0 1 7.876923-39.778462 158.089846 158.089846 0 0 0 0-223.704615 36.391385 36.391385 0 0 1 1.181539-50.806154c13.784615-13.784615 36.233846-14.178462 50.806153-1.181539a231.778462 231.778462 0 0 1 0 327.286154c-7.089231 6.695385-16.147692 10.633846-25.993846 10.633846m-79.163077-139.815384c-12.209231 12.603077-30.326154 17.723077-47.261538 13.390769-16.935385-4.332308-30.326154-17.723077-34.658462-34.658462-4.332308-16.935385 0.787692-35.052308 13.39077-47.261538 19.298462-18.510769 49.624615-18.116923 68.135384 0.787692 18.904615 18.116923 18.904615 48.443077 0.393846 67.741539">
-              </path>
-            </svg>
-            <svg v-else-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.VOICE" viewBox="0 0 1024 1024"
-                 class="inputSwitchIcon">
-              <path
-                  d="M727.4496 599.8592h-33.28a16.6912 16.6912 0 0 1-16.6912-16.6912v-66.56a16.6912 16.6912 0 0 1 16.6912-16.6912h33.28a16.6912 16.6912 0 0 1 16.6912 16.6912v66.56a16.6912 16.6912 0 0 1-16.6912 16.6912m0-149.9648h-33.28a16.6912 16.6912 0 0 1-16.6912-16.6912v-66.56a16.6912 16.6912 0 0 1 16.6912-16.6912h33.28a16.6912 16.6912 0 0 1 16.6912 16.6912v66.56a16.6912 16.6912 0 0 1-16.6912 16.6912m-133.12 149.9648h-33.28a16.6912 16.6912 0 0 1-16.6912-16.6912v-66.56a16.6912 16.6912 0 0 1 16.6912-16.6912h33.28a16.6912 16.6912 0 0 1 16.6912 16.6912v66.56a16.7936 16.7936 0 0 1-16.6912 16.6912m0-149.9648h-33.28a16.6912 16.6912 0 0 1-16.6912-16.6912v-66.56a16.6912 16.6912 0 0 1 16.6912-16.6912h33.28a16.6912 16.6912 0 0 1 16.6912 16.6912v66.56a16.7936 16.7936 0 0 1-16.6912 16.6912m116.5824 233.216v16.7936a16.6912 16.6912 0 0 1-16.6912 16.6912H327.68a16.6912 16.6912 0 0 1-16.6912-16.6912v-16.6912a16.6912 16.6912 0 0 1 16.6912-16.6912h366.4896a16.7936 16.7936 0 0 1 16.6912 16.6912m-249.856-83.2512h-33.28a16.6912 16.6912 0 0 1-16.6912-16.6912v-66.56a16.6912 16.6912 0 0 1 16.6912-16.6912h33.28a16.6912 16.6912 0 0 1 16.6912 16.6912v66.56a16.6912 16.6912 0 0 1-16.6912 16.6912m0-149.9648h-33.28a16.6912 16.6912 0 0 1-16.6912-16.6912v-66.56a16.6912 16.6912 0 0 1 16.6912-16.6912h33.28a16.6912 16.6912 0 0 1 16.6912 16.6912v66.56a16.6912 16.6912 0 0 1-16.6912 16.6912m-133.12 149.9648h-33.28a16.6912 16.6912 0 0 1-16.6912-16.6912v-66.56a16.6912 16.6912 0 0 1 16.6912-16.6912h33.28a16.6912 16.6912 0 0 1 16.6912 16.6912v66.56a16.6912 16.6912 0 0 1-16.6912 16.6912m0-149.9648h-33.28a16.6912 16.6912 0 0 1-16.6912-16.6912v-66.56a16.6912 16.6912 0 0 1 16.6912-16.6912h33.28a16.6912 16.6912 0 0 1 16.6912 16.6912v66.56a16.6912 16.6912 0 0 1-16.6912 16.6912"></path>
-            </svg>
-          </i>
+              <!-- object标签会阻止click事件 todo 弃用 -->
+              <!--<object v-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT"
+                      class="inputSwitch"
+                      type="image/svg+xml" data="/public/svg/unit_speak.svg" style="fill: red"/>
+              <object v-else-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.VOICE"
+                      class="inputSwitch"
+                      type="image/svg+xml" data="/public/svg/unit_keyboard.svg" style="fill: red"/>-->
+              <img v-if="initConfig.inputMode === `keyboard`" src="/public/svg/unit_speak.svg"/>
+              <img v-else-if="initConfig.inputMode === `speak`" src="/public/svg/unit_keyboard.svg"/>
+            </i>
             <div class="input">
               <textarea id="textInput" class="textInput" placeholder="请输入您的问题,我来为您解答~"
                         v-model="inputText"
-                        v-show="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT">
+                        v-show="initConfig.inputMode === `keyboard`">
               </textarea>
               <button id="speakButton" class="voiceInput" @click="sendMessage"
-                      v-show="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.VOICE">
+                      v-show="initConfig.inputMode === `speak`">
               </button>
             </div>
-
-
             <i class="inputSwitch" @click="showUnitTool(`emoji`)">
               <img src="/public/svg/unit_emoji.svg"/>
             </i>
@@ -120,7 +116,16 @@ import {transferSeat} from "../stores/chat/seat";
 import {gainFingerprint, upload} from "../stores/tool/CustomTool";
 import {gainBasicConfiguration} from "../stores/VisitorAPi";
 import {ChatMsgV2, bulid} from "../stores/chat/ChatMessage.ts";
-import {ChatMode, ChatRole, ChatScene, chatService, emojiService, EmojiTab, UnitModule} from "../stores/chat/ChatV2";
+import {
+  ChatMode,
+  ChatRole,
+  ChatScene,
+  chatService,
+  emojiService,
+  EmojiTab,
+  InputMode,
+  UnitModule
+} from "../stores/chat/ChatV2";
 import {playWav} from '../stores/chat/chat';
 import {h5ContentService, ResourceMode} from "../stores/chat/H5ContentService";
 
@@ -138,7 +143,7 @@ export default {
         unitModule: undefined,
         own: 123456,
         other: 1234556,
-        inputBoxType: TOOLBAR_INPUTBOX_TYPE.TEXT,
+        inputMode: InputMode.keyboard,
         topicBox: {
         },
         informationBox: {
@@ -152,7 +157,6 @@ export default {
   methods: {
     /* 展示组件|表情包 */
     showUnitTool(unitModule) {
-
       if (this.initConfig.unitModule && this.initConfig.unitModule === unitModule){
         this.initConfig.unitModule = undefined;
       }else {
@@ -166,8 +170,8 @@ export default {
             break;
           }
           case UnitModule.emoji:{
-            unitBar.style.height = '230px';
-            unitBar.style.maxHeight = '230px';
+            unitBar.style.height = '190px';
+            unitBar.style.maxHeight = '190px';
             emojiService.initEmoji();
             break;
           }
@@ -175,29 +179,23 @@ export default {
       }
       scrollButton();
     },
-    /*/!*  *!/
-    showEmote() {
-      if (this.initConfig.unitModule && this.initConfig.unitModule === UnitModule.emoji){
-        this.initConfig.unitModule = undefined;
-      }else {
-        this.initConfig.unitModule = UnitModule.emoji
-      }
-      emojiService.initEmoji();
-      scrollButton();
-    },*/
 
     /* 切换输入方式(文本输入、音频输入) */
-    inputSwitch() {
-      if (this.initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT) {
-        initMedia();
+    inputSwitch(inputMode) {
+      this.initConfig.inputMode = this.initConfig.inputMode === InputMode.speak ?
+          InputMode.keyboard : InputMode.speak;
+      switch (this.initConfig.inputMode){
+        case InputMode.speak:{
+          initMedia();
+          break;
+        }default:{
+        }
       }
-      this.initConfig.inputBoxType = this.initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.VOICE ?
-          TOOLBAR_INPUTBOX_TYPE.TEXT : TOOLBAR_INPUTBOX_TYPE.VOICE;
     },
 
     /* 撤回消息按钮处理事件-重新编辑 */
     reEdit(oldMessage) {
-      this.initConfig.inputBoxType = TOOLBAR_INPUTBOX_TYPE.TEXT;
+      this.initConfig.inputMode = InputMode.keyboard;
       this.inputText = oldMessage;
     },
 
@@ -474,6 +472,11 @@ export default {
     /*gainFingerprint().then(res=>{
       console.log(res)
     });*/
+    /*let that = this;
+    let inputSwitch = document.getElementById(`inputSwitch`);
+    inputSwitch.addEventListener(`click`,function (){
+      that.inputSwitch();
+    })*/
   }
 }
 </script>
