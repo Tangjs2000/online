@@ -18,7 +18,7 @@ export default defineConfig({
         viteVConsole({
             entry: path.resolve('src/main.js'), // 入口文件，或者可以使用这个配置: [path.resolve('src/main.js')]
             localEnabled: false, // 本地是否启用
-            enabled: false, // 是否启用
+            enabled: true, // 是否启用
             config: {
                 maxLogNumber: 1000,
                 theme: 'light' // 主题颜色 'dark'|'light'

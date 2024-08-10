@@ -33,8 +33,7 @@
  * @param {MediaStream} mediaStream - Single media-stream object, array of media-streams, html-canvas-element, etc.
  * @param {object} config - {type:"video", recorderType: MediaStreamRecorder, disableLogs: true, numberOfAudioChannels: 1, bufferSize: 0, sampleRate: 0, desiredSampRate: 16000, video: HTMLVideoElement, etc.}
  */
-
-function RecordRTC(mediaStream, config) {
+export function RecordRTC(mediaStream, config) {
     if (!mediaStream) {
         throw 'First parameter is required.';
     }

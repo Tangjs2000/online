@@ -26,7 +26,7 @@
     height: 32px;
     border-radius: 5px;
 }
-.emojiTab-item:hover{
+.emojiTab-item:active{
     background-color: #FFFFFF;
 }
 

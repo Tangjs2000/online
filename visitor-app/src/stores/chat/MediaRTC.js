@@ -1,8 +1,6 @@
 import axios from "axios";
 import Recorder from "js-audio-recorder";
-import {msgProcess, CHAT_CONSTANT} from "./chat";
-import {bulid, ChatMsgV2} from "./ChatMessage";
-import {ChatMode, ChatRole, ChatScene, chatService} from "./ChatV2";
+import {ChatScene, chatService} from "./ChatV2";
 
 let hasInitFinish = false;
 let hasCancel = false;

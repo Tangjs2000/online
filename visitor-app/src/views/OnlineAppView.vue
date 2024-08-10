@@ -51,7 +51,7 @@
         </div>
         <!-- 工具栏 -->
         <div id="toolbar" class="toolbar">
-            <i id="inputSwitch" class="inputSwitch recordMess" @click="inputSwitch">
+            <i id="inputSwitch" class="inputSwitch" @click="inputSwitch">
               <!-- object标签会阻止click事件 todo 弃用 -->
               <!--<object v-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT"
                       class="inputSwitch"
@@ -59,7 +59,7 @@
               <object v-else-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.VOICE"
                       class="inputSwitch"
                       type="image/svg+xml" data="/public/svg/unit_keyboard.svg" style="fill: red"/>-->
-              <img v-if="initConfig.inputMode === `keyboard`" src="/public/svg/unit_speak.svg"/>
+              <img style="flex: 1;height:26px" v-if="initConfig.inputMode === `keyboard`" src="/public/svg/unit_speak.svg"/>
               <img v-else-if="initConfig.inputMode === `speak`" src="/public/svg/unit_keyboard.svg"/>
             </i>
             <div class="input">
@@ -67,16 +67,16 @@
                         v-model="inputText"
                         v-show="initConfig.inputMode === `keyboard`">
               </textarea>
-              <button id="speakButton" class="voiceInput" @click="sendMessage"
+              <button id="speakButton" class="voiceInput"
                       v-show="initConfig.inputMode === `speak`">
               </button>
             </div>
             <i class="inputSwitch" @click="showUnitTool(`emoji`)">
               <img src="/public/svg/unit_emoji.svg"/>
             </i>
-            <button v-if="inputText" id="sendButton" class="sendButton" @click="sendMessage">发送</button>
+            <button v-show="inputText" id="sendButton" class="sendButton" @click="sendMessage">发送</button>
             <!-- 组件工具(视频、文件) -->
-            <i v-else id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
+            <i v-if="!inputText" id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
               <img src="/public/svg/unit_extend.svg">
             </i>
         </div>
@@ -128,6 +128,7 @@ import {
 } from "../stores/chat/ChatV2";
 import {playWav} from '../stores/chat/chat';
 import {h5ContentService, ResourceMode} from "../stores/chat/H5ContentService";
+import {mic_open} from "../stores/chat/HoldToTalk";
 
 
 // let chatImpl = new ChatImpl();
@@ -186,7 +187,8 @@ export default {
           InputMode.keyboard : InputMode.speak;
       switch (this.initConfig.inputMode){
         case InputMode.speak:{
-          initMedia();
+          // initMedia();
+          mic_open();
           break;
         }default:{
         }

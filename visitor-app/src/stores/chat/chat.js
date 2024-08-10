@@ -115,7 +115,10 @@ const msgProcess = function (inputType, inputText, resourceUri, wavDuration, fil
     }
 }
 
-let audio = new Audio();
+let audio = document.createElement(`audio`);
+let audioSource = document.createElement(`source`);
+audio.appendChild(audioSource)
+
 let playWavChatId;
 let playOrPause;    // true播放、false暂停
 /**
@@ -123,7 +126,7 @@ let playOrPause;    // true播放、false暂停
  * @param resourceUri
  */
 const playWav = function (chatId, resourceUri) {
-    if (playWavChatId && playWavChatId === chatId && audio && audio.src) {
+    if (playWavChatId && playWavChatId === chatId && audio && audioSource.src) {
         playOrPause ? audio.pause() : audio.play();
         return;
     }
@@ -133,7 +136,7 @@ const playWav = function (chatId, resourceUri) {
         url: "/unit" + resourceUri,
         method: "GET",
         headers: {
-            "Content-Type": "application/json;charset=UTF-8"
+            // "Content-Type": "application/json;charset=UTF-8"
         },
         responseType: "blob"
     }).then(res => {
@@ -143,7 +146,7 @@ const playWav = function (chatId, resourceUri) {
         let url = URL.createObjectURL(blob);
 
         // 创建一个audio元素并设置src属性为刚才创建的URL
-        audio.src = url;
+        audioSource.src = url;
         audio.onplay = function () { // 音频播放事件触发
             playOrPause = true;
             console.log("播放");

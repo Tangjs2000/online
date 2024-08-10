@@ -1,5 +1,6 @@
 import {initChat, chat} from './robot'
 import {bulid, ChatMessageImpl, chatMessageService, ChatMsgV2} from "./ChatMessage";
+import {playWav} from "./chat";
 
 export interface Chat {
 
@@ -196,6 +197,10 @@ export class ChatImpl implements Chat {
         customMenu.appendChild(revoke);
 
         return customMenu;
+    }
+
+    public playWav(){
+
     }
 
 }

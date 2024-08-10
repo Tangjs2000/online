@@ -19,13 +19,17 @@
 
 /* 工具栏-(输入框、语音条转换按钮) */
 .inputSwitch {
-    display: block;
+    display: flex;
     width: var(--toolbar-inner-line-height);
     height: var(--toolbar-inner-line-height);
     border-radius: 100%;
     color: var(--basic-color-tone);
     background-color: #FFFFFF;
     /*background-color: transparent;*/
+    /*text-align: center;
+    vertical-align: middle;*/
+    align-items: center;
+    justify-items: center;
 }
 
 /* 工具栏-输入框 */
@@ -46,6 +50,9 @@
     width: 100%;
     height: var(--toolbar-inner-line-height);
     word-wrap: break-word;
+}
+.textInput:active{
+    border: 1px seagreen solid;
 }
 
 /* 工具栏-语音输入框 */

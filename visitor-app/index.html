@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <link rel="icon" href="/favicon.ico">
-        <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-        <title>测试</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    </head>
-    <body>
-        <script type="module" src="/src/main.js"></script>
-        <div id="app"></div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <title>测试</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="src/application/application.css"/>
+</head>
+<body>
+<script type="module" src="/src/main.js"></script>
+<div id="app"></div>
+
+<!-- 全局遮流罩弹窗 -->
+<div id="globalMask" class="globalMask">
+    <div id="popupV1" class="popup">
+        <div class="popup-header"></div>
+        <div class="popup-body">
+            <div id="popup-body-content" class="popup-body content"></div>
+            <div id="popup-operate" class="popup-operate"></div>
+        </div>
+        <div>
+<!--            <img src="">-->
+        </div>
+    </div>
+</div>
+</body>
 </html>
