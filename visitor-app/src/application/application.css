@@ -9,7 +9,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3); /* 半透明遮罩 */
     z-index: 1000; /* 确保遮罩在其他内容之上 */
-    display: block;
+    display: none;
     /*pointer-events: none;*/
 }
 
@@ -26,6 +26,16 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+/* 关闭按钮 */
+.popup-close {
+    display: none;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 3px;
+    right: 8px;
 }
 
 .popup-header {

@@ -37,6 +37,9 @@
           </div>
           <!-- 新消息(最新会话消息) -->
           <div id="newChat">
+            <div id="test" class="dialogV2">
+
+            </div>
             <!-- 撤回消息 todo 本人撤回和对方撤回 不同展示处理-->
             <div id="revoke" class="dialogV2">
               <div class="systemCard">你撤回了一条消息
@@ -51,34 +54,35 @@
         </div>
         <!-- 工具栏 -->
         <div id="toolbar" class="toolbar">
-            <i id="inputSwitch" class="inputSwitch" @click="inputSwitch">
-              <!-- object标签会阻止click事件 todo 弃用 -->
-              <!--<object v-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT"
-                      class="inputSwitch"
-                      type="image/svg+xml" data="/public/svg/unit_speak.svg" style="fill: red"/>
-              <object v-else-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.VOICE"
-                      class="inputSwitch"
-                      type="image/svg+xml" data="/public/svg/unit_keyboard.svg" style="fill: red"/>-->
-              <img style="flex: 1;height:26px" v-if="initConfig.inputMode === `keyboard`" src="/public/svg/unit_speak.svg"/>
-              <img v-else-if="initConfig.inputMode === `speak`" src="/public/svg/unit_keyboard.svg"/>
-            </i>
-            <div class="input">
+          <i id="inputSwitch" class="inputSwitch" @click="inputSwitch">
+            <!-- object标签会阻止click事件 todo 弃用 -->
+            <!--<object v-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT"
+                    class="inputSwitch"
+                    type="image/svg+xml" data="/public/svg/unit_speak.svg" style="fill: red"/>
+            <object v-else-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.VOICE"
+                    class="inputSwitch"
+                    type="image/svg+xml" data="/public/svg/unit_keyboard.svg" style="fill: red"/>-->
+            <img style="flex: 1;height:26px" v-if="initConfig.inputMode === `keyboard`"
+                 src="/public/svg/unit_speak.svg"/>
+            <img v-else-if="initConfig.inputMode === `speak`" src="/public/svg/unit_keyboard.svg"/>
+          </i>
+          <div class="input">
               <textarea id="textInput" class="textInput" placeholder="请输入您的问题,我来为您解答~"
                         v-model="inputText"
                         v-show="initConfig.inputMode === `keyboard`">
               </textarea>
-              <button id="speakButton" class="voiceInput"
-                      v-show="initConfig.inputMode === `speak`">
-              </button>
-            </div>
-            <i class="inputSwitch" @click="showUnitTool(`emoji`)">
-              <img src="/public/svg/unit_emoji.svg"/>
-            </i>
-            <button v-show="inputText" id="sendButton" class="sendButton" @click="sendMessage">发送</button>
-            <!-- 组件工具(视频、文件) -->
-            <i v-if="!inputText" id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
-              <img src="/public/svg/unit_extend.svg">
-            </i>
+            <button id="speakButton" class="voiceInput"
+                    v-show="initConfig.inputMode === `speak`">
+            </button>
+          </div>
+          <i class="inputSwitch" @click="showUnitTool(`emoji`)">
+            <img src="/public/svg/unit_emoji.svg"/>
+          </i>
+          <button v-show="inputText" id="sendButton" class="sendButton" @click="sendMessage">发送</button>
+          <!-- 组件工具(视频、文件) -->
+          <i v-if="!inputText" id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
+            <img src="/public/svg/unit_extend.svg">
+          </i>
         </div>
         <div v-show="initConfig.unitModule" id="unitBar" class="unitBar">
           <div v-show="initConfig.unitModule === `extend`" id="extendUnit" class="extendUnit"></div>
@@ -92,6 +96,9 @@
       </div>
       <!-- 信息栏 -->
       <div id="informationBox" v-if="initConfig.informationBox.show" class="informationBox"></div>
+    </div>
+    <div>
+      <audio id="player"></audio>
     </div>
   </div>
 </template>
@@ -110,7 +117,6 @@ import {formatDate, getRuntimeEnv, uuid} from "xijs"
 import {Basic} from "../stores/BasicConfigure";
 import {TOOLBAR_INPUTBOX_TYPE} from "../stores/chat/onlineAppConstant";
 import {scrollTopEventProcess, scrollButton, historyV2} from "../stores/chat/chat";
-import {initMedia} from "../stores/chat/MediaRTC";
 import {initChat} from "../stores/chat/robot";
 import {transferSeat} from "../stores/chat/seat";
 import {gainFingerprint, upload} from "../stores/tool/CustomTool";
@@ -145,8 +151,7 @@ export default {
         own: 123456,
         other: 1234556,
         inputMode: InputMode.keyboard,
-        topicBox: {
-        },
+        topicBox: {},
         informationBox: {
           show: false,
         }
@@ -158,19 +163,19 @@ export default {
   methods: {
     /* 展示组件|表情包 */
     showUnitTool(unitModule) {
-      if (this.initConfig.unitModule && this.initConfig.unitModule === unitModule){
+      if (this.initConfig.unitModule && this.initConfig.unitModule === unitModule) {
         this.initConfig.unitModule = undefined;
-      }else {
+      } else {
         let unitBar = document.getElementById(`unitBar`);
         this.initConfig.unitModule = unitModule
 
-        switch (this.initConfig.unitModule){
-          case UnitModule.extend:{
+        switch (this.initConfig.unitModule) {
+          case UnitModule.extend: {
             unitBar.style.height = '170px';
             unitBar.style.maxHeight = '170px';
             break;
           }
-          case UnitModule.emoji:{
+          case UnitModule.emoji: {
             unitBar.style.height = '190px';
             unitBar.style.maxHeight = '190px';
             emojiService.initEmoji();
@@ -185,12 +190,13 @@ export default {
     inputSwitch(inputMode) {
       this.initConfig.inputMode = this.initConfig.inputMode === InputMode.speak ?
           InputMode.keyboard : InputMode.speak;
-      switch (this.initConfig.inputMode){
-        case InputMode.speak:{
+      switch (this.initConfig.inputMode) {
+        case InputMode.speak: {
           // initMedia();
           mic_open();
           break;
-        }default:{
+        }
+        default: {
         }
       }
     },
@@ -286,13 +292,13 @@ export default {
     async initBasicConfiguration() {
       let that = this;
       /* 1、请求接口获取基础配置 */
-      let bubbles;
+      let bubbles = null;
       let isRobotPriority = true;
-      let unitTools;
+      let unitTools = null;
       await gainBasicConfiguration()
           .then(result => {
-            bubbles = result.bubbles;
-            unitTools = result.unitTools;
+            bubbles = result?.bubbles;
+            unitTools = result?.unitTools;
           })
 
       /* 2、动态初始化浏览器页签logo和标题 */
@@ -313,7 +319,6 @@ export default {
           let bubbleLi = document.createElement(`li`);
           bubbleLi.innerText = bubble;
           bubbleLi.addEventListener(`click`, function () {
-            // msgProcess(CHAT_CONSTANT.inputType.text, bubble, null);
             chatService.sendRichText(bubble, ChatScene.robot);
           })
           bubbleEl.appendChild(bubbleLi);
@@ -329,7 +334,13 @@ export default {
           let unitToolButton = document.createElement(`button`);
           let unitToolP = document.createElement(`p`);
           unitToolDiv.id = unitTool.id;
-          unitToolButton.innerHTML = unitTool.h5_icon;
+          if (unitTool.h5_icon) {
+            unitToolButton.innerHTML = unitTool.h5_icon;
+          }else {
+            let img = document.createElement(`img`);
+            img.src = unitTool.h5_icon_url
+            unitToolButton.appendChild(img);
+          }
           unitToolP.innerText = unitTool.title;
           unitToolDiv.classList.add(`unit`);
           unitToolDiv.addEventListener(`click`, function () {
@@ -362,7 +373,7 @@ export default {
             chatMsg.guideTitle = data.guideTitle;
             chatMsg.recommends = data.recommends;
             chatMsg.chatMode = ChatMode.richText
-            bulid(chatMsg,false);
+            bulid(chatMsg, false);
           }
         })
       }
@@ -406,15 +417,16 @@ export default {
 
           /* 2、监听文件输入document元素文件上传事件 */
           fileInput.addEventListener("change", function (event) {
+            debugger
             let files = event.target.files;
             if (files && files.length > 0) {
               for (const file of files) {
                 upload(file).then(fileInfo => {
                   let element = h5ContentService.builder()
-                  .resourceMode(ResourceMode.picture)
-                  .parse("."+fileInfo.fileSuffix)
-                  .resourceUri(fileInfo.accessUrl)
-                  .build();
+                      .resourceMode(ResourceMode.picture)
+                      .parse("." + fileInfo.fileSuffix)
+                      .resourceUri(fileInfo.accessUrl)
+                      .build();
                   let contentH5 = element.outerHTML;
                   console.log(contentH5);
                   chatService.sendRichText(contentH5, ChatScene.robot);
@@ -445,13 +457,16 @@ export default {
           }
           break;
         }
+        case 'scan':{
+
+        }
         default: {
           console.log("调用未知的处理单元");
         }
       }
     },
-    playWavPage(msgId,url){
-      playWav(msgId,url);
+    playWavPage(msgId, url) {
+      chatService.playWav(msgId, url);
     }
 
   },

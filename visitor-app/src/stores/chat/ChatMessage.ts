@@ -325,6 +325,11 @@ export class ChatMessageImpl implements ChatMessage {
                 chatMsg.personalName = history.personalName;
                 chatMsg.datetime = history.datetime;
                 chatMsg.hasRead = history.hasRead;
+
+                if (!history.contentH5){
+                    chatMsg.wavUrl = history.contentExt?.resourceUri;
+                    chatMsg.chatMode = ChatMode.wav;
+                }
                 dialog = this.visitorDialog(chatMsg);
                 break;
             }
@@ -562,7 +567,7 @@ class ChatCardImpl implements ChatCard {
         messageCard.classList.add("messageCard", "left");
         messageBody.classList.add("messageBody", "left");
         avatar.classList.add("constant_img");
-        read.classList.add("read");
+        read.classList.add("sending");
         goodOrStep.classList.add();
         avatar.src = chatMsg.avatar;
 
@@ -607,7 +612,7 @@ class ChatCardImpl implements ChatCard {
         messageCard.classList.add("messageCard", "right");
         messageBody.classList.add("messageBody", "right");
         avatar.classList.add("constant_img");
-        read.classList.add("read");
+        read.classList.add("sending");
         avatar.src = chatMsg.avatar;
 
 
@@ -694,8 +699,7 @@ class MessageCardImpl implements MessageCard{
         wavDiv.append(wavInfo);
 
         wavDiv.addEventListener(`click`,function (){
-            console.log("playWav:",chatMsg.msgId,chatMsg.wavUrl)
-            playWav(chatMsg.msgId, chatMsg.wavUrl);
+            chatService.playWav(chatMsg.msgId, chatMsg.wavUrl);
         });
 
         return wavDiv;

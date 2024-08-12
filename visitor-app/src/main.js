@@ -49,6 +49,7 @@ import {
     Skeleton as TSkeleton,
     NoticeBar as TNoticeBar
 } from 'tdesign-mobile-vue'
+import {keepAlive} from "./application/ApplicationBackend";
 
 
 
@@ -108,3 +109,7 @@ new Vue({
     beforeCreate() {
     }
 })*/
+
+setTimeout(()=>{
+    keepAlive.openConn()
+})

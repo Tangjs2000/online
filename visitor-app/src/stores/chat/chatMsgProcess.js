@@ -11,6 +11,7 @@
 /* 1、定义当前所需调用接口API */
 import {CHAT_CONSTANT, msgProcess, playWav, scrollButton} from "./chat";
 import {fileCard} from "./ChatCard";
+import {chatService} from "./ChatV2";
 
 const API = {}
 
@@ -173,7 +174,7 @@ const ownMsgViewBuild = function (chatMsg) {
         playWavImg.src = '/img/online_play.svg';
         messageDiv.appendChild(playWavImg);
         messageDiv.addEventListener("click", function () {
-            playWav(chatMsg.chatId, chatMsg.resourceUri);
+            chatService.playWav(chatMsg.chatId, chatMsg.resourceUri);
         });
     }
 
@@ -246,7 +247,7 @@ const otherMsgViewBuild = function (chatMsg) {
         playWavImg.src = '/img/online_play.svg';
         messageDiv.appendChild(playWavImg);
         messageDiv.addEventListener("click", function () {
-            playWav(chatMsg.chatId, chatMsg.resourceUri);
+            chatService.playWav(chatMsg.chatId, chatMsg.resourceUri);
         });
     }
 

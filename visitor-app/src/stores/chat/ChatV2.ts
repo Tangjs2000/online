@@ -1,6 +1,7 @@
 import {initChat, chat} from './robot'
 import {bulid, ChatMessageImpl, chatMessageService, ChatMsgV2} from "./ChatMessage";
 import {playWav} from "./chat";
+import axios from "axios";
 
 export interface Chat {
 
@@ -25,7 +26,7 @@ export interface Chat {
      *
      * @param msgId 消息编号
      */
-    renewSendStatus(msgId: String): void;
+    renewSendStatus(msgId: String, status: MessageStatus): void;
 
 }
 
@@ -61,9 +62,11 @@ export class ChatImpl implements Chat {
                             bulid(chatMsg, false);
                         }
                         console.log("发送成功");
+                        that.renewSendStatus(chatMsg.msgId, MessageStatus.unRead);
                     })
                     .catch((e) => {
                         console.error("发送失败", e);
+                        that.renewSendStatus(chatMsg.msgId, MessageStatus.sendFail);
                     });
                 break;
             }
@@ -123,8 +126,15 @@ export class ChatImpl implements Chat {
      *
      * @param msgId 消息编号
      */
-    private renewSendStatus(msgId: String): void {
-
+    private renewSendStatus(msgId: String, status: MessageStatus): void {
+        let msgStatus = document.getElementById(`read-` + msgId);
+        if (msgStatus?.classList?.length > 0) {
+            // @ts-ignore
+            for (let item of msgStatus.classList) {
+                msgStatus.classList.remove(item);
+            }
+        }
+        msgStatus.classList.add(status.toString());
     }
 
     /**
@@ -133,10 +143,10 @@ export class ChatImpl implements Chat {
      * @param event
      * @private
      */
-    public systemEventProcess(event:SystemEvent,params: object){
+    public systemEventProcess(event: SystemEvent, params: object) {
         switch (event) {
             /* 撤回消息-重新编辑 */
-            case SystemEvent.reEdit:{
+            case SystemEvent.reEdit: {
                 let textInput = document.getElementById(`textInput`);
                 textInput.innerHTML = params.content;
                 break;
@@ -147,16 +157,16 @@ export class ChatImpl implements Chat {
     /**
      * 菜单事件
      */
-    public menuEvent(menuEvent:MenuEvent,msgId: string){
-        console.log(menuEvent,msgId)
+    public menuEvent(menuEvent: MenuEvent, msgId: string) {
+        console.log(menuEvent, msgId)
         switch (menuEvent) {
             /* 拷贝消息处理 */
-            case MenuEvent.copy:{
+            case MenuEvent.copy: {
                 let dialog = document.getElementById(`dialog-` + msgId);
                 break;
             }
             /* 撤回消息处理 */
-            case MenuEvent.revoke:{
+            case MenuEvent.revoke: {
                 let dialog = document.getElementById(`dialog-` + msgId);
                 document.removeChild(dialog);
                 break;
@@ -170,7 +180,7 @@ export class ChatImpl implements Chat {
      * @param menu
      * @param chatMsg
      */
-    public menuPopup(menu:HTMLElement, chatMsg:ChatMsgV2, event:MouseEvent) {
+    public menuPopup(menu: HTMLElement, chatMsg: ChatMsgV2, event: MouseEvent) {
         /* 获取操作事件 */
         let menuEvent = undefined;
         for (const [key, val] of Object.entries(MenuEvent)) {
@@ -178,7 +188,7 @@ export class ChatImpl implements Chat {
                 menuEvent = key;
             }
         }
-        chatService.menuEvent(menuEvent ,chatMsg.msgId);
+        chatService.menuEvent(menuEvent, chatMsg.msgId);
         menu.style.display = 'none';
     }
 
@@ -199,11 +209,58 @@ export class ChatImpl implements Chat {
         return customMenu;
     }
 
-    public playWav(){
+    public playWavChatId: string;
+    public playOrPause: boolean;    // true播放、false暂停
+    public player: HTMLAudioElement;
 
+    /**
+     * 播放语音
+     * @param chatId
+     * @param resourceUri
+     */
+    public playWav(chatId: string, resourceUri: string) {
+        if (this.playWavChatId && this.playWavChatId === chatId && this.player) {
+            this.playOrPause ? this.player.pause() : this.player.play();
+            return;
+        }
+        this.playWavChatId = chatId;
+        let that = this;
+
+        axios.create().request({
+            url: "/unit" + resourceUri,
+            headers:{
+                'Accept': 'application/media', // 设置接受media类型的响应
+                'Content-Type': 'application/json'
+            },
+            method: "GET",
+            responseType: 'blob'
+        }).then(res => {
+            // 创建一个临时的URL指向录音文件
+            let blob = new Blob([res.data], {type: 'audio/wav'}); // 或者相应的MIME类型
+            let url = URL.createObjectURL(blob);
+
+            that.player = document.createElement(`audio`);
+            that.player.src = url;
+            that.player.onplay = () => { // 音频播放事件触发
+                that.playOrPause = true;
+                console.log("播放");
+            }
+            that.player.onpause = () => { // 音频(暂停|停止)事件触发
+                that.playOrPause = false;
+                console.log("暂停或结束");
+            }
+            that.player.onendded = () => {  // 当不需要临时的URL时，应该释放它
+                that.playOrPause = false;
+                URL.revokeObjectURL(url);
+            }
+            that.player.play(); // 播放录音
+        }).catch(e => {
+            console.error(e);
+        });
     }
 
 }
+
 export const chatService = new ChatImpl();
 
 /**
@@ -212,11 +269,12 @@ export const chatService = new ChatImpl();
  * @author jiashuai.tang
  * @since 2024/08/08
  */
-export interface EmojiService{
+export interface EmojiService {
 }
-export class EmojiServiceImpl implements EmojiService{
+
+export class EmojiServiceImpl implements EmojiService {
     /* 初始化表情包 */
-    initEmoji(){
+    initEmoji() {
         /* 清除表情包选项卡 */
         let emojiTabDiv = document.getElementById(`emojiTab`);
         while (emojiTabDiv.firstChild) {
@@ -244,21 +302,22 @@ export class EmojiServiceImpl implements EmojiService{
                 let emojiTab = document.createElement(`img`);
                 emojiTab.src = "/emoji/group_" + item.name + ".svg"
                 emojiTab.classList.add("emojiTab-item");
-                emojiTab.addEventListener("click", ()=>{
+                emojiTab.addEventListener("click", () => {
                     that.emojiTabSwitch(EmojiTab.default)
                 })
                 emojiTabDiv.appendChild(emojiTab);
-                if (EmojiTab.default === item.type && "default" === item.name){
+                if (EmojiTab.default === item.type && "default" === item.name) {
                     that.emojiTabSwitch(EmojiTab.default)
                 }
             }
         }
     }
+
     /* 切换表情包选项卡 */
-    emojiTabSwitch(emojiTab){
+    emojiTabSwitch(emojiTab) {
         let that = this;
-        const emojiDefault = ["yyds","亲亲", "便便", "分裂", "发呆", "发烧", "口水", "口罩", "可怜", "叹气", "吃瓜",
-            "吐", "咒骂", "大哭", "大笑", "奋斗", "害羞", "尴尬", "庆祝", "彩虹马", "微笑", "思考", "惊讶","感到鸭力","晕",
+        const emojiDefault = ["yyds", "亲亲", "便便", "分裂", "发呆", "发烧", "口水", "口罩", "可怜", "叹气", "吃瓜",
+            "吐", "咒骂", "大哭", "大笑", "奋斗", "害羞", "尴尬", "庆祝", "彩虹马", "微笑", "思考", "惊讶", "感到鸭力", "晕",
             "暗中观察", "柠檬精", "炸弹", "生气", "疑问", "白眼", "睡觉", "石化", "笑哭", "调皮", "酷", "闭嘴", "骷髅",
             "黑脸", "鼓掌"];
 
@@ -276,7 +335,7 @@ export class EmojiServiceImpl implements EmojiService{
                 element.width = 34;
                 element.height = 34;
                 element.alt = emojiName;
-                element.addEventListener("click",()=>{
+                element.addEventListener("click", () => {
                     /*  */
                     let textInput = document.getElementById(`textInput`);
                     textInput.value += element.outerHTML;
@@ -289,6 +348,7 @@ export class EmojiServiceImpl implements EmojiService{
         }
     }
 }
+
 export const emojiService = new EmojiServiceImpl();
 
 
@@ -299,7 +359,7 @@ export const emojiService = new EmojiServiceImpl();
  * @since 2024/07/28
  */
 export enum ChatScene {
-    robot="robot", manual="manual"
+    robot = "robot", manual = "manual"
 }
 
 /**
@@ -309,7 +369,7 @@ export enum ChatScene {
  * @since 2024/07/28
  */
 export enum ChatSendStatus {
-    sending="sending", send_success="send_success", send_fail="send_fail"
+    sending = "sending", send_success = "send_success", send_fail = "send_fail"
 }
 
 /**
@@ -319,7 +379,7 @@ export enum ChatSendStatus {
  * @since 2024/07/28
  */
 export enum ChatRole {
-    visitor="visitor", seat="seat", robot="robot"
+    visitor = "visitor", seat = "seat", robot = "robot"
 }
 
 /**
@@ -339,46 +399,46 @@ export enum ChatType {
  * @since 2024/07/28
  */
 export enum ChatMode {
-    wav='wav',             // 语音
-    richText='richText',   // 富文本
-    refer='richText'       // 引用消息
+    wav = 'wav',             // 语音
+    richText = 'richText',   // 富文本
+    refer = 'richText'       // 引用消息
 }
 
 /**
  * 系统消息事件处理
  */
-export enum SystemEvent{
-    reEdit="reEdit"
+export enum SystemEvent {
+    reEdit = "reEdit"
 }
 
 /**
  * 菜单事件
  */
-export enum MenuEvent{
+export enum MenuEvent {
     /* 复制 */
-    copy="menu-copy",
+    copy = "menu-copy",
     /* 撤回 */
-    revoke="menu-revoke",
+    revoke = "menu-revoke",
     /* 保存 */
-    save="menu-save",
+    save = "menu-save",
     /* 另存为 */
-    saveAs="menu-save-as"
+    saveAs = "menu-save-as"
 }
 
 /**
  * 表情包选项卡
  */
-export enum EmojiTab{
+export enum EmojiTab {
     /* 默认 */
-    default="default",
+    default = "default",
     /* 自定义 */
-    custom="custom"
+    custom = "custom"
 }
 
 /**
  * 工具单元模块
  */
-export enum UnitModule{
+export enum UnitModule {
     extend = "extend",
     emoji = "emoji"
 }
@@ -386,7 +446,19 @@ export enum UnitModule{
 /**
  * 输入方式
  */
-export enum InputMode{
-    speak="speak",
-    keyboard="keyboard"
+export enum InputMode {
+    speak = "speak",
+    keyboard = "keyboard"
+}
+
+/**
+ * 消息状态
+ */
+export enum MessageStatus {
+    sending = "sending",  // 发送中
+    sendFail = "sendFail",// 发送失败
+    unRead = "unRead",    // 未读
+    read = "read",        // 已读
+
+
 }

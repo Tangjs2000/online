@@ -30,7 +30,9 @@ class ApplicationBackend {
         globalMask.appendChild(popupDiv);*/
         /*let popupV1 = document.getElementById(`popupV1`);
         console.log(popupV1.getElementsByClassName(`popup-body-content`)[0]);*/
-        /* 3、通知内容 */
+        /* 3、通知标题及内容 */
+        let popupHeader = document.getElementById(`popup-header`)
+        popupHeader.innerText = notice.title;
         let popupBodyContent = document.getElementById(`popup-body-content`);
         popupBodyContent.innerHTML = notice.content ? notice.content : "";
         /* 4、通知操作按钮 */
@@ -49,7 +51,13 @@ class ApplicationBackend {
             }
         }
         /* 5、关闭按钮 */
-        // notice.canClosed
+        if (notice?.canClosed === true) {
+            let popupV1Close = document.getElementById(`popupV1Close`);
+            popupV1Close.style.display = 'block';
+            popupV1Close.addEventListener("click", () => {
+                globalMask.style.display = 'none';
+            });
+        }
     }
 
 
@@ -67,18 +75,21 @@ export class KeepAlive {
      * 打开连接
      */
     public openConn() {
-        // keep_alive_websocket = new WebSocket(KEEP_ALIVE_WEBSOCKET_URL);
+        /*keep_alive_websocket = new WebSocket(KEEP_ALIVE_WEBSOCKET_URL);
+        keep_alive_websocket.onopen(() => {
+
+        })*/
         /* 1、创建通知消息对象 */
         let notice = new Notice();
         let noticeOperate = [];
         notice.noticeId = Date.now().toString();
-        notice.title = undefined;
+        notice.title = "发现新版本";
         notice.operate = noticeOperate;
         notice.content = "版本号：v3.3.7+37<br/>" +
             "更新后出现两个app，使用新版，卸载旧版本即可<br/>" +
             "1.修复一些情况下会播放失败<br/>" +
             "2.提高播放速度";
-        notice.canClosed = false;
+        notice.canClosed = true;
         let var1 = new NoticeOperate();
         var1.text = '立即下载';
         var1.accessUrl = 'https://47.120.74.142/';

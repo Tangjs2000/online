@@ -23,7 +23,8 @@
     --own-constant-margin-top: 10px;
     --message-card-it-size: 8px; /* 消息指示三角大小 */
     --message-card-font-size: 10px;
-    --basic-color-tone: #C02C38; /* 整体基础色调 */
+    /*--basic-color-tone: #C02C38; !* 整体基础色调 *!*/
+    --basic-color-tone: #d54941; /* 整体基础色调 */
     --icon-basic-color-tone: #FCFCFC; /* 图标背景基础色调 */
 
     --bubble-bar--height: 30px;

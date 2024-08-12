@@ -1,21 +1,21 @@
 import {RecordRTC} from '../voice/RecordRTC.js';
 import axios from "axios";
 import {ChatScene, chatService} from "./ChatV2";
+import {applyMicrophonePermission} from "../AndroidApi";
 
 let microphone = undefined;
-let recorder:RecordRTC;
+let recorder: RecordRTC;
 const isEdge = navigator.userAgent.indexOf('Edge') !== -1 && (!!navigator.msSaveOrOpenBlob || !!navigator.msSaveBlob);
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 /* 按住说话 */
-export const holdToTalk = ()=>{
+export const holdToTalk = () => {
 }
-
 
 
 /* 打开麦克风 */
 export const mic_open = () => {
-    let micPermission = mic_permission_open(function(mic:MediaSource) {
+    let micPermission = mic_permission_open(function (mic: MediaSource) {
         microphone = mic;
         /* 1、初始化RecordRTC */
         let options = {
@@ -28,13 +28,13 @@ export const mic_open = () => {
             sampleRate: 16000,
             recorderType: undefined,
         };
-        if(isSafari || isEdge) {
+        if (isSafari || isEdge) {
             options.recorderType = RecordRTC.StereoAudioRecorder;
         }
-        if(navigator.platform && navigator.platform.toString().toLowerCase().indexOf('win') === -1) {
+        if (navigator.platform && navigator.platform.toString().toLowerCase().indexOf('win') === -1) {
             // options.sampleRate = 48000; // or 44100 or remove this line for default
         }
-        if(isSafari) {
+        if (isSafari) {
             // options.sampleRate = 44100;
             options.bufferSize = 4096;
             options.numberOfAudioChannels = 2;
@@ -90,7 +90,7 @@ export const mic_open = () => {
  *
  * @param mediaSource
  */
-const startCallback = (mediaSource:MediaSource) => {
+const startCallback = (mediaSource: MediaSource) => {
 }
 
 /**
@@ -98,7 +98,7 @@ const startCallback = (mediaSource:MediaSource) => {
  *
  * @param mediaSource
  */
-const stopCallback = (mediaSource:MediaSource) => {
+const stopCallback = (mediaSource: MediaSource) => {
     console.log("停止录音回调")
 
     // @ts-ignore
@@ -106,9 +106,8 @@ const stopCallback = (mediaSource:MediaSource) => {
     /* 左声道|右声道 */
     let leftchannel = internalRecorder.leftchannel;
     let rightchannel = internalRecorder.rightchannel;
-
     // @ts-ignore
-    let wavBlob = new Blob([ recorder.getBlob() ], { type: 'audio/wav' })
+    let wavBlob = new Blob([recorder.getBlob()], {type: 'audio/wav'})
 
     /* 上传录音文件到服务器 */
     console.log("录音停止事件=====>录音开始上传", wavBlob);
@@ -124,7 +123,7 @@ const stopCallback = (mediaSource:MediaSource) => {
         data: formData,
     }).then(res => {
         let {data} = res.data;
-        chatService.sendVoice(data,ChatScene.robot)
+        chatService.sendVoice(data, ChatScene.robot)
     }).catch(e => {
         console.error(e);
     });
@@ -147,10 +146,15 @@ const stopCallback = (mediaSource:MediaSource) => {
  *
  * @param callback
  */
-export const mic_permission_open = (callback):boolean =>{
-    if(typeof navigator.mediaDevices === 'undefined' || !navigator.mediaDevices.getUserMedia) {
+export const mic_permission_open = (callback): boolean => {
+    try {
+        applyMicrophonePermission();
+    } catch {
+    }
+
+    if (typeof navigator.mediaDevices === 'undefined' || !navigator.mediaDevices.getUserMedia) {
         alert('This browser does not supports WebRTC getUserMedia API.');
-        if(!!navigator.getUserMedia) {
+        if (!!navigator.getUserMedia) {
             alert('This browser seems supporting deprecated getUserMedia API.');
         }
     }
@@ -158,11 +162,11 @@ export const mic_permission_open = (callback):boolean =>{
         audio: isEdge ? true : {
             echoCancellation: false
         }
-    }).then(function(mic) {
+    }).then(function (mic) {
         callback(mic);
         return true;
-    }).catch(function(error) {
-        console.error(error);
+    }).catch(function (error) {
+        console.error("打开录音权限失败", error);
     });
     return false;
 }
