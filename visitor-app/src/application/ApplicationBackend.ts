@@ -101,7 +101,7 @@ export class KeepAlive {
         noticeOperate.push(var1);
         noticeOperate.push(var2);
 
-        application.noticeProcess(notice);
+        // application.noticeProcess(notice);
     }
 
 

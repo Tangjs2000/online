@@ -1,6 +1,5 @@
 import {initChat, chat} from './robot'
-import {bulid, ChatMessageImpl, chatMessageService, ChatMsgV2} from "./ChatMessage";
-import {playWav} from "./chat";
+import {bulid, chatMessageService, ChatMsgV2} from "./ChatMessage";
 import axios from "axios";
 
 export interface Chat {
@@ -209,6 +208,18 @@ export class ChatImpl implements Chat {
         return customMenu;
     }
 
+    /**
+     * 输入文本
+     * @param str
+     */
+    public inputText(str, canClear) {
+        let textInput = document.getElementById(`textInput`);
+        if (canClear)
+            textInput.innerHTML = str;
+        else
+            textInput.innerHTML += str;
+    }
+
     public playWavChatId: string;
     public playOrPause: boolean;    // true播放、false暂停
     public player: HTMLAudioElement;
@@ -228,7 +239,7 @@ export class ChatImpl implements Chat {
 
         axios.create().request({
             url: "/unit" + resourceUri,
-            headers:{
+            headers: {
                 'Accept': 'application/media', // 设置接受media类型的响应
                 'Content-Type': 'application/json'
             },
@@ -336,15 +347,18 @@ export class EmojiServiceImpl implements EmojiService {
                 element.height = 34;
                 element.alt = emojiName;
                 element.addEventListener("click", () => {
-                    /*  */
-                    let textInput = document.getElementById(`textInput`);
-                    textInput.value += element.outerHTML;
+                    chatService.inputText(element.outerHTML, false);
+                    // textInput.value += "[(" +emojiName+")]";
                     // textInput.appendChild(element);
                     // textInput.innerHTML = textInput.innerHTML + element.outerHTML;
                     // chatService.sendRichText(element.outerHTML, ChatScene.robot);
                 })
                 emojiBody.appendChild(element);
             }
+            /*let backspace = document.createElement(`div`);
+            backspace.classList.add("emojiBody-backspace");
+            emojiBody.appendChild(backspace);*/
+
         }
     }
 }

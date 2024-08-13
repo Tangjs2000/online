@@ -67,10 +67,10 @@
             <img v-else-if="initConfig.inputMode === `speak`" src="/public/svg/unit_keyboard.svg"/>
           </i>
           <div class="input">
-              <textarea id="textInput" class="textInput" placeholder="请输入您的问题,我来为您解答~"
-                        v-model="inputText"
-                        v-show="initConfig.inputMode === `keyboard`">
-              </textarea>
+            <custom-textarea id="textInput" class="textInput"
+                             v-model="inputText" placeholder="请输入您的问题,我来为您解答~"
+                             v-show="initConfig.inputMode === `keyboard`">
+            </custom-textarea>
             <button id="speakButton" class="voiceInput"
                     v-show="initConfig.inputMode === `speak`">
             </button>
@@ -78,9 +78,9 @@
           <i class="inputSwitch" @click="showUnitTool(`emoji`)">
             <img src="/public/svg/unit_emoji.svg"/>
           </i>
-          <button v-show="inputText" id="sendButton" class="sendButton" @click="sendMessage">发送</button>
+          <button v-show="textInputBox && textInputBox.innerHTML" id="sendButton" class="sendButton" @click="sendMessage">发送</button>
           <!-- 组件工具(视频、文件) -->
-          <i v-if="!inputText" id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
+          <i v-if="!(textInputBox && textInputBox.innerHTML)" id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
             <img src="/public/svg/unit_extend.svg">
           </i>
         </div>
@@ -88,8 +88,9 @@
           <div v-show="initConfig.unitModule === `extend`" id="extendUnit" class="extendUnit"></div>
           <div v-show="initConfig.unitModule === `emoji`" id="emojiUnit" class="emojiUnit">
             <div id="emojiTab" class="emojiTab"></div>
-            <div style="flex: 1;overflow-y: auto;">
+            <div class="emojiContent">
               <div id="emojiBody" class="emojiBody"></div>
+              <div id="emojiBody-backspace" class="emojiBody-backspace" @click="clearInput"></div>
             </div>
           </div>
         </div>
@@ -122,26 +123,14 @@ import {transferSeat} from "../stores/chat/seat";
 import {gainFingerprint, upload} from "../stores/tool/CustomTool";
 import {gainBasicConfiguration} from "../stores/VisitorAPi";
 import {ChatMsgV2, bulid} from "../stores/chat/ChatMessage.ts";
-import {
-  ChatMode,
-  ChatRole,
-  ChatScene,
-  chatService,
-  emojiService,
-  EmojiTab,
-  InputMode,
-  UnitModule
-} from "../stores/chat/ChatV2";
-import {playWav} from '../stores/chat/chat';
+import {ChatMode, ChatRole, ChatScene, chatService, emojiService, InputMode, UnitModule} from "../stores/chat/ChatV2";
 import {h5ContentService, ResourceMode} from "../stores/chat/H5ContentService";
 import {mic_open} from "../stores/chat/HoldToTalk";
-
-
-// let chatImpl = new ChatImpl();
-// let chatMessageService = new ChatMessageImpl();
+import CustomTextarea from "../components/customTextarea.vue";
 
 export default {
   name: "online-app",
+  components: {CustomTextarea},
   data() {
     return {
       Basic,
@@ -157,6 +146,7 @@ export default {
         }
       },
       inputText: '',
+      textInputBox: document.getElementById(`textInput`),
       dialogMsg: [],
     }
   },
@@ -185,6 +175,9 @@ export default {
       }
       scrollButton();
     },
+    clearInput() {
+      console.log('asdasdas');
+    },
 
     /* 切换输入方式(文本输入、音频输入) */
     inputSwitch(inputMode) {
@@ -192,8 +185,13 @@ export default {
           InputMode.keyboard : InputMode.speak;
       switch (this.initConfig.inputMode) {
         case InputMode.speak: {
+          console.log("InputMode.speak")
           // initMedia();
           mic_open();
+          break;
+        }
+        case InputMode.keyboard: {
+          console.log("InputMode.keyboard")
           break;
         }
         default: {
@@ -204,7 +202,7 @@ export default {
     /* 撤回消息按钮处理事件-重新编辑 */
     reEdit(oldMessage) {
       this.initConfig.inputMode = InputMode.keyboard;
-      this.inputText = oldMessage;
+      chatService.inputText(oldMessage, true);
     },
 
     /**
@@ -233,13 +231,9 @@ export default {
     sendMessage(inputText) {
       let dialogMsgBar = document.getElementById(`dialogMsgBar`);
       let inputBox = document.getElementById(`textInput`);
-      inputText = inputText instanceof String && inputText ? inputText : inputBox.value;
+      inputText = inputText instanceof String && inputText ? inputText : inputBox.innerHTML;
       if (inputText?.length === 0) return; // 不允许发送空消息
-      this.inputText = '';
-      inputBox.value = null;
-      // msgProcess(CHAT_CONSTANT.inputType.text, inputText, null);
-
-
+      inputBox.innerHTML = null;
       chatService.sendRichText(inputText, ChatScene.robot);
     },
 
@@ -336,7 +330,7 @@ export default {
           unitToolDiv.id = unitTool.id;
           if (unitTool.h5_icon) {
             unitToolButton.innerHTML = unitTool.h5_icon;
-          }else {
+          } else {
             let img = document.createElement(`img`);
             img.src = unitTool.h5_icon_url
             unitToolButton.appendChild(img);
@@ -457,7 +451,7 @@ export default {
           }
           break;
         }
-        case 'scan':{
+        case 'scan': {
 
         }
         default: {
@@ -470,6 +464,7 @@ export default {
     }
 
   },
+  watch: {},
   mounted: function () {
     let res = gainFingerprint();
     console.log(res);
@@ -494,6 +489,9 @@ export default {
     inputSwitch.addEventListener(`click`,function (){
       that.inputSwitch();
     })*/
+
+    this.textInputBox = document.getElementById(`textInput`);
+    console.log(this.textInputBox)
   }
 }
 </script>
