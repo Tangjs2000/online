@@ -220,8 +220,8 @@ const history = function () {
 export const historyV2 = function () {
     let userinfo = JSON.parse(localStorage.getItem(`userinfo`));
     let data = {
-        "userId": userinfo?.userId,
-        "datatime": userinfo?.initDatetime,
+        "visitorId": userinfo?.userId,
+        "endTime": userinfo?.initDatetime,
         "current": CHAT_CONSTANT.history.current,
         "size": CHAT_CONSTANT.history.size
     }

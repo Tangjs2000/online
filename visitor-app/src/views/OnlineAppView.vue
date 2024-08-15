@@ -67,7 +67,7 @@
             <img v-else-if="initConfig.inputMode === `speak`" src="/public/svg/unit_keyboard.svg"/>
           </i>
           <div class="input">
-            <custom-textarea id="textInput" class="textInput"
+            <custom-textarea id="textInput" ref="textInput" class="textInput"
                              v-model="inputText" placeholder="请输入您的问题,我来为您解答~"
                              v-show="initConfig.inputMode === `keyboard`">
             </custom-textarea>
@@ -78,9 +78,12 @@
           <i class="inputSwitch" @click="showUnitTool(`emoji`)">
             <img src="/public/svg/unit_emoji.svg"/>
           </i>
-          <button v-show="textInputBox && textInputBox.innerHTML" id="sendButton" class="sendButton" @click="sendMessage">发送</button>
+          <button v-if="inputText" id="sendButton" class="sendButton"
+                  @click="sendMessage">发送
+          </button>
           <!-- 组件工具(视频、文件) -->
-          <i v-if="!(textInputBox && textInputBox.innerHTML)" id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
+          <i v-else id="unitTool" class="inputSwitch"
+             @click="showUnitTool(`extend`)">
             <img src="/public/svg/unit_extend.svg">
           </i>
         </div>
@@ -174,9 +177,20 @@ export default {
         }
       }
       scrollButton();
+      if (this.initConfig.unitModule) {
+        /* 隐藏软键盘 */
+        document.getElementById('textInput').blur();
+      }
     },
+    /* 输入内容 */
+    h5Input(h5Content) {
+      this.$refs.textInput.input(h5Content);
+    },
+    /* 清除输入框内容 */
     clearInput() {
-      console.log('asdasdas');
+      let inputBox = document.getElementById(`textInput`);
+      inputBox.innerHTML = null
+      this.inputText = null;
     },
 
     /* 切换输入方式(文本输入、音频输入) */
@@ -233,7 +247,7 @@ export default {
       let inputBox = document.getElementById(`textInput`);
       inputText = inputText instanceof String && inputText ? inputText : inputBox.innerHTML;
       if (inputText?.length === 0) return; // 不允许发送空消息
-      inputBox.innerHTML = null;
+      this.clearInput();
       chatService.sendRichText(inputText, ChatScene.robot);
     },
 
@@ -251,7 +265,7 @@ export default {
     },
 
     /* 初始化信息 */
-    init() {
+    async init() {
       /* 1、检验当前环境 */
       let env = getRuntimeEnv();
       if (env.isAndroid || env.isIOS) {
@@ -261,22 +275,36 @@ export default {
 
       /* 2、初始化页面配置 */
       let textInput = document.getElementById("textInput");
-      let sendButton = document.getElementById("sendButton");
+      textInput.addEventListener('click', () => {
+        /* 输入框获取焦点事件 */
+        textInput.focus()
+      });
+      textInput.addEventListener('focus', () => {
+        /* 关闭组件显示 */
+        this.initConfig.unitModule = undefined;
+      })
       textInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') { // 或者使用 event.keyCode === 13，但不建议，因为keyCode已废弃
           event.preventDefault(); // 阻止默认的回车行为（例如提交表单）
           // 调用与按钮点击相同的事件处理程序
           // 这将触发按钮的click事件
+          let sendButton = document.getElementById("sendButton");
           sendButton.click();
+        } else if (event.keyCode === 229) {
+          // 判断是否为输入法弹出键
+          // 阻止默认行为，即阻止输入法弹出
+          event.preventDefault();
         }
       });
 
+      /* 生成个人信息 */
+      let historyUserinfo = localStorage.getItem(`userinfo`);
+      let deviceId = await gainFingerprint();
       let userinfo = {
-        userId: "12345678",
+        userId: deviceId,
         meetingId: uuid(20),
         initDatetime: formatDate(Date.now(), 'YY-MM-DD hh:mm:ss')
       }
-      // console.log("localStorage", localStorage)
       localStorage.setItem("userinfo", JSON.stringify(userinfo));
     },
 
@@ -289,6 +317,7 @@ export default {
       let bubbles = null;
       let isRobotPriority = true;
       let unitTools = null;
+      await this.init();
       await gainBasicConfiguration()
           .then(result => {
             bubbles = result?.bubbles;
@@ -466,32 +495,19 @@ export default {
   },
   watch: {},
   mounted: function () {
-    let res = gainFingerprint();
-    console.log(res);
+    let that = this;
 
     /*const vConsole = new VConsole();
     vConsole.show();*/
     // this.scrollListen();
-    this.init();
+    // this.init();
     // this.loadCoverPage();
 
     /* 初始化基础配置 */
     this.Basic = Basic;
     this.initBasicConfiguration();
     let fileCardMsg = document.getElementById("fileCardMsg");
-
-
-    /*gainFingerprint().then(res=>{
-      console.log(res)
-    });*/
-    /*let that = this;
-    let inputSwitch = document.getElementById(`inputSwitch`);
-    inputSwitch.addEventListener(`click`,function (){
-      that.inputSwitch();
-    })*/
-
-    this.textInputBox = document.getElementById(`textInput`);
-    console.log(this.textInputBox)
+    window.globalInput = this.h5Input;
   }
 }
 </script>

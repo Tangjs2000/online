@@ -213,11 +213,7 @@ export class ChatImpl implements Chat {
      * @param str
      */
     public inputText(str, canClear) {
-        let textInput = document.getElementById(`textInput`);
-        if (canClear)
-            textInput.innerHTML = str;
-        else
-            textInput.innerHTML += str;
+        window.globalInput(str);
     }
 
     public playWavChatId: string;
@@ -348,10 +344,7 @@ export class EmojiServiceImpl implements EmojiService {
                 element.alt = emojiName;
                 element.addEventListener("click", () => {
                     chatService.inputText(element.outerHTML, false);
-                    // textInput.value += "[(" +emojiName+")]";
-                    // textInput.appendChild(element);
-                    // textInput.innerHTML = textInput.innerHTML + element.outerHTML;
-                    // chatService.sendRichText(element.outerHTML, ChatScene.robot);
+                    document.getElementById('textInput').blur();
                 })
                 emojiBody.appendChild(element);
             }

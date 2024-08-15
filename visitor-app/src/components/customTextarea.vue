@@ -28,8 +28,42 @@ export default {
     "modelValue": {
       deep: true,
       handler: function (val, oldVal) {
-        // this.$emit('update:modelValue', val);
+        this.$emit('update:modelValue', val);
       }
+    }
+  },
+  methods: {
+    input(h5Content) {
+      /*  */
+      let element = document.createElement(`i`)
+      element.innerHTML = h5Content;
+
+      let textarea = this.$refs["custom-textarea"];
+      textarea.focus();
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      /* 插入待输入内容 */
+      range.insertNode(element);
+      // range.setStartAfter(h5Content);
+      range.collapse(false);  // 光标显示在插入内容位置 true之前、false之后
+      selection.removeAllRanges();  // 移除所有选中区
+      selection.addRange(range);  // 添加选中区
+      this.$emit('update:modelValue', textarea.innerHTML);  // 更新modelValue
+
+      /*box.focus();
+      // 创建一个新的选区
+      var selection = window.getSelection();
+      // 如果光标位置原来就存在，就用原来的。
+      // 原来不存在，就重新创建一个
+      var range = currentRange ?? selection.getRangeAt(0);
+      // 插入表情图标
+      range.insertNode(img.cloneNode());
+      // 插入后，光标显示在表情图片后面
+      range.collapse();
+      // 移除其他的区域
+      selection.removeAllRanges();
+      // 把带有表情图片的区域插入到选区内
+      selection.addRange(range);*/
     }
   },
   mounted() {

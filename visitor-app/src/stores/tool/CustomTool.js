@@ -77,7 +77,7 @@ const upload = async function (file) {
                 unit: units[num],
                 accessUrl: "/unit/" + data,
                 type: fileType,
-                fileSuffix : fileSuffix
+                fileSuffix: fileSuffix
             };
         }
         console.log("上传文件(upload)完成。");
@@ -178,23 +178,20 @@ const URLProcess = {
 /**
  * 获取浏览器指纹
  */
-const gainFingerprint = function () {
-    let murmur;
-    Fingerprint2.get(function(components) {
-        const values = components.map(function(component,index) {
-            if (index === 0) { //把微信浏览器里UA的wifi或4G等网络替换成空,不然切换网络会ID不一样
-                return component.value.replace(/\bNetType\/\w+\b/, '')
-            }
-            return component.value
-        })
-        // 生成最终id murmur
-        murmur = Fingerprint2.x64hash128(values.join(''), 31)
-        console.log(murmur);
-    })
-    return murmur;
-    /*const values = components.map((component) => component.value);
-    const fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
-    console.log(fingerprint); // 输出计算得到的指纹*/
+const gainFingerprint = async function () {
+    return new Promise((resolve => {
+        Fingerprint2.get(function (components) {
+            const values = components.map(function (component, index) {
+                if (index === 0) { //把微信浏览器里UA的wifi或4G等网络替换成空,不然切换网络会ID不一样
+                    return component.value.replace(/\bNetType\/\w+\b/, '')
+                }
+                return component.value
+            })
+            // 生成最终id murmur
+            let murmur = Fingerprint2.x64hash128(values.join(''), 31)
+            resolve(murmur);
+        });
+    }));
 }
 
 export {upload, download, prompt, gainFingerprint, URLProcess}
