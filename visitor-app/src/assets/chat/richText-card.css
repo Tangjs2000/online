@@ -3,7 +3,7 @@
     --message-card-hover-background: #EBEBEB;
     --message-card-border-color: #FFFFFF;
     --message-card-border-radius: 5px;
-    --message-card-padding: 5px;
+    --message-card-padding: 10px;
     --message-card-min-width: 20%;
     --message-card-width: 200px;
     --message-card-max-width: 220px;
@@ -65,13 +65,13 @@
     /* 边框圆角 */
     border: var(--message-card-border-width) solid var(--message-card-border-color);
     border-radius: var(--message-card-border-radius);
-    padding: var(--message-card-padding);
+    padding: 5px var(--message-card-padding);
 }
 
 /* 设置英文自动换行 */
 .messageBody span {
     word-wrap: break-word;
-    font-size: 15px;
+    /*font-size: 15px;*/
     line-height: 1.2;
 
 }
@@ -79,7 +79,7 @@
 .messageBody p {
     margin: 0;
     word-wrap: break-word;
-    font-size: 15px;
+    /*font-size: 15px;*/
     line-height: 1.2;
 }
 

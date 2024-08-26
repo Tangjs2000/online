@@ -3,13 +3,20 @@
 @media screen and (max-width: 500px) {
     body {
         font-size: 1rem;
-        font-family: "思源宋体 Medium";
+        font-family: "阿里巴巴普惠体 2.0 65 Medium";
     }
 
     /* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
     @font-face {
-        font-family: "思源宋体 Medium";font-weight: 500;src: url("//at.alicdn.com/wf/webfont/72ookOcRijeI/Pe3VCHRdwQfv.woff2") format("woff2"),
+        font-family: "思源宋体 Medium";font-weight: 900;src: url("//at.alicdn.com/wf/webfont/72ookOcRijeI/Pe3VCHRdwQfv.woff2") format("woff2"),
     url("//at.alicdn.com/wf/webfont/72ookOcRijeI/SNO1wY8ONe5R.woff") format("woff");
+        font-display: swap;
+    }
+
+    /* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+    @font-face {
+        font-family: "阿里巴巴普惠体 2.0 65 Medium";font-weight: 500;src: url("//at.alicdn.com/wf/webfont/72ookOcRijeI/0qvyFdPDo65u.woff2") format("woff2"),
+    url("//at.alicdn.com/wf/webfont/72ookOcRijeI/2BCh66EIrhKb.woff") format("woff");
         font-display: swap;
     }
 }

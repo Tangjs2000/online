@@ -172,6 +172,9 @@
     margin: 0 10px;
     position: relative;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
 }
 
 .unit button {
@@ -185,7 +188,7 @@
 .unit p {
     width: 100%;
     font-weight: bold;
-    font-size: 11px;
+    font-size: 0.7rem;
     text-align: center;
     color: #2c3e50;
 }

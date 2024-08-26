@@ -244,12 +244,12 @@ export default {
     },
     /* 展示组件|表情包 */
     showUnitTool(unitModule) {
+
       if (this.initConfig.unitModule && this.initConfig.unitModule === unitModule) {
         this.initConfig.unitModule = undefined;
       } else {
         let unitBar = document.getElementById(`unitBar`);
         this.initConfig.unitModule = unitModule
-
         switch (this.initConfig.unitModule) {
           case UnitModule.extend: {
             unitBar.style.height = '170px';
