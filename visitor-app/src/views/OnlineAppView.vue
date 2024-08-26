@@ -94,7 +94,7 @@
         </div>
         <!-- 工具栏 -->
         <div id="toolbar" class="toolbar">
-          <i id="inputSwitch" class="inputSwitch" @click="inputSwitch">
+          <i id="inputSwitch" class="inputSwitch" @click.stop>
             <!-- object标签会阻止click事件 todo 弃用 -->
             <!--<object v-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT"
                     class="inputSwitch"
@@ -103,8 +103,11 @@
                     class="inputSwitch"
                     type="image/svg+xml" data="/public/svg/unit_keyboard.svg" style="fill: red"/>-->
             <img style="flex: 1;height:26px" v-if="initConfig.inputMode === `keyboard`"
+                 @click="showUnitTool(`speak`)"
                  src="/public/svg/unit_speak.svg"/>
-            <img v-else-if="initConfig.inputMode === `speak`" src="/public/svg/unit_keyboard.svg"/>
+            <img v-else-if="initConfig.inputMode === `speak`"
+                 @click="showUnitTool(`keyboard`)"
+                 src="/public/svg/unit_keyboard.svg"/>
           </i>
           <div class="input">
             <custom-textarea id="textInput" ref="textInput" class="textInput"
@@ -242,33 +245,53 @@ export default {
         }, 100)
       });
     },
-    /* 展示组件|表情包 */
+    /**
+     * 控制组件切换
+     *
+     * @param unitModule
+     */
     showUnitTool(unitModule) {
-
-      if (this.initConfig.unitModule && this.initConfig.unitModule === unitModule) {
+      if (this.initConfig.unitModule === unitModule) {
         this.initConfig.unitModule = undefined;
-      } else {
-        let unitBar = document.getElementById(`unitBar`);
-        this.initConfig.unitModule = unitModule
-        switch (this.initConfig.unitModule) {
-          case UnitModule.extend: {
-            unitBar.style.height = '170px';
-            unitBar.style.maxHeight = '170px';
-            break;
-          }
-          case UnitModule.emoji: {
-            unitBar.style.height = '190px';
-            unitBar.style.maxHeight = '190px';
-            emojiService.initEmoji();
-            break;
-          }
+        return;
+      }
+      this.initConfig.unitModule = undefined;
+      switch (unitModule) {
+        /* 输入方式切换(文本输入、音频输入) */
+        case InputMode.speak: {
+          console.log("InputMode.speak")
+          mic_open();
+          this.initConfig.inputMode = InputMode.speak;
+          break;
+        }
+        case InputMode.keyboard: {
+          console.log("InputMode.keyboard")
+          this.initConfig.inputMode = InputMode.keyboard;
+          break;
+        }
+        /* 展示组件|表情包 */
+        case UnitModule.extend: {
+          let unitBar = document.getElementById(`unitBar`);
+          unitBar.style.height = '170px';
+          unitBar.style.maxHeight = '170px';
+          this.initConfig.unitModule = UnitModule.extend
+          break;
+        }
+        case UnitModule.emoji: {
+          let unitBar = document.getElementById(`unitBar`);
+          unitBar.style.height = '190px';
+          unitBar.style.maxHeight = '190px';
+          emojiService.initEmoji();
+          this.initConfig.unitModule = UnitModule.emoji
+          break;
+        }
+        default: {
+
         }
       }
       scrollButton();
-      if (this.initConfig.unitModule) {
-        /* 隐藏软键盘 */
-        document.getElementById('textInput').blur();
-      }
+      /* 隐藏软键盘 */
+      document.getElementById('textInput').blur();
     },
     /* 输入内容 */
     h5Input(h5Content) {
@@ -279,26 +302,6 @@ export default {
       let inputBox = document.getElementById(`textInput`);
       inputBox.innerHTML = null
       this.inputText = null;
-    },
-
-    /* 切换输入方式(文本输入、音频输入) */
-    inputSwitch(inputMode) {
-      this.initConfig.inputMode = this.initConfig.inputMode === InputMode.speak ?
-          InputMode.keyboard : InputMode.speak;
-      switch (this.initConfig.inputMode) {
-        case InputMode.speak: {
-          console.log("InputMode.speak")
-          // initMedia();
-          mic_open();
-          break;
-        }
-        case InputMode.keyboard: {
-          console.log("InputMode.keyboard")
-          break;
-        }
-        default: {
-        }
-      }
     },
 
     /* 撤回消息按钮处理事件-重新编辑 */
