@@ -1,10 +1,22 @@
 <template>
   <div>
+    <div id="media-mask" class="media-mask">
+      <div class="media-mask">
+        <img src="./background.jpg"/>
+      </div>
+    </div>
     <div id="custom-menu" class="menu">
       <p id="menu-copy" class="menu-item">复制</p>
       <p id="menu-revoke" class="menu-item">撤回</p>
       <p id="menu-save" class="menu-item">保存</p>
       <p id="menu-save-as" class="menu-item">另存为</p>
+    </div>
+    <!-- 按住说话、上滑取消样式 -->
+    <div id="hold-mask" class="hold-mask">
+      <div class="hold-mask-item">
+        <img id="hold-mask-img" src="/public/svg/online/holdToTalk.svg" class="hold-mask-img">
+        <p id="hold-mask-explain" class="hold-mask-explain">上滑取消</p>
+      </div>
     </div>
     <div id="appBar" class="appBar">
       <!-- 1、对话栏 -->
@@ -46,6 +58,34 @@
                 <span style="color: darkorange;margin: 0 5px" @click="reEdit('123123')">重新编辑</span>
               </div>
             </div>
+            <div id="dialog-1723828301947" class="dialogV2 right">
+              <div id="chatCard-1723828301947" class="chatCard right">
+                <div id="messageCard-1723828301947" class="messageCard right"><i id="read-1723828301947"
+                                                                                 class="unRead"></i>
+                  <div id="messageBody-1723828301947" class="messageBody right">
+                    <div class="replayContent"><img
+                        @click="showLargePic(`/unit/minio/download?filename=微信截图_20240525223138_20240817011141.png`)"
+                        :src="`/unit/minio/download?filename=微信截图_20240525223138_20240817011141.png`"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <img id="avatar-1723828301947" class="constant_img"
+                   :src="`/unit/minio/download?filename=visitor_20240731011746.jpg`"></div>
+            <div id="dialog-1723828389621" class="dialogV2 right">
+              <div id="chatCard-1723828389621" class="chatCard right">
+                <div id="messageCard-1723828389621" class="messageCard right"><i id="read-1723828389621"
+                                                                                 class="unRead"></i>
+                  <div id="messageBody-1723828389621" class="messageBody right">
+                    <div class="replayContent"><img
+                        @click="showLargePic(`/unit/minio/download?filename=1711881392033_20240817011308.jpg`)"
+                        :src="`/unit/minio/download?filename=1711881392033_20240817011308.jpg`"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <img id="avatar-1723828389621" class="constant_img"
+                   :src="`/unit/minio/download?filename=visitor_20240731011746.jpg`"></div>
           </div>
         </div>
         <!-- 气泡栏 -->
@@ -101,9 +141,6 @@
       <!-- 信息栏 -->
       <div id="informationBox" v-if="initConfig.informationBox.show" class="informationBox"></div>
     </div>
-    <div>
-      <audio id="player"></audio>
-    </div>
   </div>
 </template>
 
@@ -130,6 +167,7 @@ import {ChatMode, ChatRole, ChatScene, chatService, emojiService, InputMode, Uni
 import {h5ContentService, ResourceMode} from "../stores/chat/H5ContentService";
 import {mic_open} from "../stores/chat/HoldToTalk";
 import CustomTextarea from "../components/customTextarea.vue";
+import Hammer from 'hammerjs';
 
 export default {
   name: "online-app",
@@ -154,6 +192,56 @@ export default {
     }
   },
   methods: {
+    /* 大图展示 */
+    showLargePic(src) {
+      let mediaMask = document.getElementById(`media-mask`);
+      /* 设置消息资源点击放大事件 */
+      let appBar = document.getElementById(`appBar`);
+      appBar.style.pointerEvents = 'none';
+      /* 1、清除内部元素 */
+      while (mediaMask.firstChild) {
+        mediaMask.removeChild(mediaMask.firstChild);
+      }
+      /* 2、创建图片元素 */
+      let image = document.createElement(`img`);
+      image.src = src;
+      image.classList.add("picture");
+      mediaMask.appendChild(image);
+      mediaMask.style.display = 'flex';
+      this.picture();
+    },
+    picture() {
+      let mediaMask = document.getElementById(`media-mask`);
+      const element = document.querySelector('.picture');
+      // 轻击事件
+      const hammer = new Hammer(element)
+      // 定义触发器
+      const tap = new Hammer.Tap({
+        taps: 1,  // 点击次数
+      })
+      // 添加到 manager 中
+      hammer.add(tap)
+
+      /* 移动事件处理 */
+      hammer.on('pan', (event) => {
+        event.target.classList.toggle('expand');
+      });
+      /* 放大|缩放事件处理 */
+      hammer.get('pinch').set({enable: true})
+      hammer.on('pinch', (event) => {
+        // 根据比例变化元素大小或位置等
+        element.style.transform = 'scale(' + event.scale + ')';
+      })
+      /* 关闭大图 */
+      hammer.on('tap', (event) => {
+        mediaMask.style.display = 'none';
+        /* 解除消息资源点击放大事件 */
+        setTimeout(() => {
+          let appBar = document.getElementById(`appBar`);
+          appBar.style.pointerEvents = 'auto';
+        }, 100)
+      });
+    },
     /* 展示组件|表情包 */
     showUnitTool(unitModule) {
       if (this.initConfig.unitModule && this.initConfig.unitModule === unitModule) {
@@ -440,7 +528,6 @@ export default {
 
           /* 2、监听文件输入document元素文件上传事件 */
           fileInput.addEventListener("change", function (event) {
-            debugger
             let files = event.target.files;
             if (files && files.length > 0) {
               for (const file of files) {
@@ -522,5 +609,7 @@ export default {
 @import url(../assets/chat/file-card.css);
 @import url(../assets/chat/menu-card.css);
 @import url(../assets/chat/emoji.css);
+@import url(../assets/chat/hold-talk.css);
+@import url(../assets/chat/media-mask.css);
 /*@import url(../assets/chat/text-card.css);*/
 </style>

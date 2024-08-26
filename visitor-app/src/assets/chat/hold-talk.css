@@ -1,0 +1,33 @@
+.hold-mask {
+    /* 设置元素宽高 */
+    width: 50%;
+    aspect-ratio: 1;
+    border-radius: 10px;
+
+    display: none;
+    z-index: 1000;
+    /* 设置元素相对于父元素居中 */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明遮罩 */
+    /* 元素内容居中 */
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.hold-mask-item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hold-mask-img {
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+.hold-mask-explain {
+}

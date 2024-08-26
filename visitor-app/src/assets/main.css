@@ -1,5 +1,6 @@
 @import './base.css';
 @import "../application/application.css";
+@import "./adaptive.css";
 
 #app {
     max-width: 100%;

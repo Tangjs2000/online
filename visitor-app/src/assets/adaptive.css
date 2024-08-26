@@ -1,0 +1,15 @@
+/* 样式自适应 */
+/* orientation: landscape(横向)|portrait(纵向)   */
+@media screen and (max-width: 500px) {
+    body {
+        font-size: 1rem;
+        font-family: "思源宋体 Medium";
+    }
+
+    /* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+    @font-face {
+        font-family: "思源宋体 Medium";font-weight: 500;src: url("//at.alicdn.com/wf/webfont/72ookOcRijeI/Pe3VCHRdwQfv.woff2") format("woff2"),
+    url("//at.alicdn.com/wf/webfont/72ookOcRijeI/SNO1wY8ONe5R.woff") format("woff");
+        font-display: swap;
+    }
+}

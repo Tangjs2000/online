@@ -333,12 +333,12 @@ export default {
 
 /* 挂机 */
 .hangUp {
-  background-image: url("/public/svg/hangUp.svg");
+  background-image: url("/public/svg/videoChat/hangUp.svg");
 }
 
 /* 翻转相机 */
 .reverseCamera {
-  background-image: url("/public/svg/reverseCamera.svg");
+  background-image: url("/public/svg/videoChat/reverseCamera.svg");
   width: 40px;
   height: 40px;
 }
@@ -350,7 +350,7 @@ export default {
 }
 .microphone.open {
   background-color: #FFFFFF;
-  background-image: url("/public/svg/microphone_open.svg");
+  background-image: url("/public/svg/videoChat/microphone_open.svg");
   background-size: 50% 50%;
   background-repeat: no-repeat;
   background-position: center;
@@ -358,7 +358,7 @@ export default {
 }
 .microphone.close {
   background-color: #181818;
-  background-image: url("/public/svg/microphone_close.svg");
+  background-image: url("/public/svg/videoChat/microphone_close.svg");
   background-size: 50% 50%;
   background-repeat: no-repeat;
   background-position: center;
@@ -370,7 +370,7 @@ export default {
 }
 .speaker.open{
   background-color: #FFFFFF;
-  background-image: url("/public/svg/speaker_open.svg");
+  background-image: url("/public/svg/videoChat/speaker_open.svg");
   background-size: 50% 50%;
   background-repeat: no-repeat;
   background-position: center;
@@ -378,7 +378,7 @@ export default {
 }
 .speaker.close{
   background-color: #181818;
-  background-image: url("/public/svg/speaker_close.svg");
+  background-image: url("/public/svg/videoChat/speaker_close.svg");
   background-size: 50% 50%;
   background-repeat: no-repeat;
   background-position: center;
@@ -390,14 +390,14 @@ export default {
 }
 .camera.open{
   background-color: #FFFFFF;
-  background-image: url("/public/svg/camera_open.svg");
+  background-image: url("/public/svg/videoChat/camera_open.svg");
   background-size: 50% 50%;
   background-repeat: no-repeat;
   background-position: center;
 }
 .camera.close{
   background-color: #181818;
-  background-image: url("/public/svg/camera_close.svg");
+  background-image: url("/public/svg/videoChat/camera_close.svg");
   background-size: 50% 50%;
   background-repeat: no-repeat;
   background-position: center;

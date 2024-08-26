@@ -13,6 +13,7 @@
     "axios": "0.18.1",
     "element-plus": "^2.6.3",
     "fingerprintjs2": "^2.1.4",
+    "hammerjs": "^2.0.8",
     "js-audio-recorder": "^1.0.7",
     "pinia": "^2.1.7",
     "qs": "^6.12.0",

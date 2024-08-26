@@ -24,7 +24,6 @@ export const mic_open = () => {
             numberOfAudioChannels: isEdge ? 1 : 2,
             checkForInactiveTracks: true,
             bufferSize: 16384,
-
             sampleRate: 16000,
             recorderType: undefined,
         };
@@ -39,50 +38,61 @@ export const mic_open = () => {
             options.bufferSize = 4096;
             options.numberOfAudioChannels = 2;
         }
-        recorder = new RecordRTC(microphone, options);
+        // @ts-ignore
+        recorder = new RecordRTC(mic, options);
 
         /* 2、初始化起点坐标、终点坐标 */
-        let hasCancel = false;
-        let posStart = 0; //初始化起点坐标
-        let posEnd = 0;   //初始化终点坐标
+        let hasCancel;
+        let posStart; //初始化起点坐标
+        let posEnd;   //初始化终点坐标
         let speakBtnElem = document.getElementById("speakButton"); // 获取按住说话按钮元素
+        let holdMask = document.getElementById(`hold-mask`);    // 获取样式蒙版
+        let holdMaskExplain = holdMask.getElementsByClassName(`hold-mask-explain`);
         speakBtnElem.innerText = '按住 说话';
 
         /* 3、添加按住说话事件 */
         speakBtnElem.addEventListener("touchstart", function (event) {
             event.stopPropagation();  // 阻止冒泡
             event.preventDefault();   //阻止浏览器默认行为
-            posStart = 0;
-            posStart = event.touches[0].pageY;  //获取起点坐标
+            hasCancel = false;
+            posStart = event.touches[0].pageY;  //设置起点坐标
+            posEnd = posStart;                  //设置终点坐标
             speakBtnElem.innerText = '松开 结束';
+            holdMask.style.display = 'block';
+            holdMaskExplain[0].innerHTML = '上滑取消';
             // @ts-ignore
             recorder.startRecording(startCallback) // 开始录音
             console.log("Start");
         });
+        /* 移动事件|检测是否取消发送 */
+        speakBtnElem.addEventListener(`touchmove`, (event) => {
+            posEnd = event.touches[0].pageY;
+            if (posStart - posEnd > 100) {
+                hasCancel = true;
+                holdMaskExplain[0].innerHTML = '松开取消';
+            } else {
+                hasCancel = false;
+                holdMaskExplain[0].innerHTML = '上滑取消';
+            }
+        })
 
         /* 4、添加说话结束事件 */
         speakBtnElem.addEventListener("touchend", function (event) {
-            event.stopPropagation();
-            event.preventDefault();
-            posEnd = 0;
-            posEnd = event.changedTouches[0].pageY;//获取终点坐标
+            /*event.stopPropagation();
+            event.preventDefault();*/
+            holdMask.style.display = 'none';
             speakBtnElem.innerText = '按住 说话';
-            if (posStart - posEnd < 100) {
-                hasCancel = false;
-                // endDate = new Date();
-                console.log("End");
-            } else {
-                hasCancel = true;
-                console.log("Cancel");
-            }
 
-            // @ts-ignore
-            recorder.stopRecording(stopCallback);
+            if (hasCancel) {
+                // @ts-ignore
+                recorder.stopRecording();
+                console.log("取消发送");
+            } else {
+                // @ts-ignore
+                recorder.stopRecording(stopCallback);
+            }
         })
     });
-    /*if (!micPermission){
-        console.error("麦克风权限无法打开");
-    }*/
 }
 
 /**
@@ -91,6 +101,7 @@ export const mic_open = () => {
  * @param mediaSource
  */
 const startCallback = (mediaSource: MediaSource) => {
+
 }
 
 /**
@@ -127,18 +138,6 @@ const stopCallback = (mediaSource: MediaSource) => {
     }).catch(e => {
         console.error(e);
     });
-
-
-    // @ts-ignore
-    /*let src = URL.createObjectURL(recorder.getBlob());
-    let newAudio = document.createElement('audio');
-    newAudio.controls = true;
-    newAudio.autoplay = true;
-
-    if(src) {
-        newAudio.src = src;
-    }
-    newAudio.play();*/
 }
 
 /**

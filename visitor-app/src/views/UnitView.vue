@@ -12,7 +12,7 @@
             :default-active="this.UNIT_NAME.WAV_TRANSFER_TEXT"
             @select="switchUnit">
           <el-menu-item :index="this.UNIT_NAME.HOME">
-            <img style="width: 50px" src="../assets/logo.svg" alt="logo"/>
+            <img style="width: 50px" src="../../public/logo.svg" alt="logo"/>
           </el-menu-item>
           <div/>
           <el-menu-item :index="this.UNIT_NAME.CHINESE_MONEY">人民币大写转换</el-menu-item>

@@ -3,7 +3,7 @@
 .messageCard {
   text-align: left;
   background: var(--message-card-background);
-  font-family: "inherit";
+  /*font-family: "inherit";*/
   max-width: var(--message-card-width);
   /*min-width: var(--message-card-min-width);*/
   min-height: calc(var(--own-constant-width) + var(--other-constant-margin-top));

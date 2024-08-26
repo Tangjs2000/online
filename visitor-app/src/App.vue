@@ -1,6 +1,6 @@
 <template>
-<!--    <router-view/>-->
-  <online-app-view/>
+    <router-view/>
+<!--  <online-app-view/>-->
 <!--  <video-chat-view />-->
   <!--  <unit-view/>-->
   <!--  <test/>-->
