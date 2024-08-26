@@ -51,13 +51,7 @@ import {
 } from 'tdesign-mobile-vue'
 import {keepAlive} from "./application/ApplicationBackend";
 
-
-
-// const VConsole = require("vconsole");
-
-
 const app = createApp(App)
-
 // app.use(createPinia())
 app.use(Router)
 app.use(ElementPlus)
@@ -100,16 +94,7 @@ app.use(TStepper)
 app.use(TCalendar)
 app.use(TSkeleton)
 app.use(TNoticeBar)
-/*vConsole.show();
-new Vue({
-    el: '#app',
-    router,
-    store,
-    render: h => h(App),
-    beforeCreate() {
-    }
-})*/
 
-setTimeout(()=>{
-    keepAlive.openConn()
+setTimeout(() => {
+    keepAlive.openConn();
 })

@@ -2,7 +2,6 @@
   <div>
     <div id="media-mask" class="media-mask">
       <div class="media-mask">
-        <img src="./background.jpg"/>
       </div>
     </div>
     <div id="custom-menu" class="menu">
@@ -58,34 +57,6 @@
                 <span style="color: darkorange;margin: 0 5px" @click="reEdit('123123')">重新编辑</span>
               </div>
             </div>
-            <div id="dialog-1723828301947" class="dialogV2 right">
-              <div id="chatCard-1723828301947" class="chatCard right">
-                <div id="messageCard-1723828301947" class="messageCard right"><i id="read-1723828301947"
-                                                                                 class="unRead"></i>
-                  <div id="messageBody-1723828301947" class="messageBody right">
-                    <div class="replayContent"><img
-                        @click="showLargePic(`/unit/minio/download?filename=微信截图_20240525223138_20240817011141.png`)"
-                        :src="`/unit/minio/download?filename=微信截图_20240525223138_20240817011141.png`"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-              <img id="avatar-1723828301947" class="constant_img"
-                   :src="`/unit/minio/download?filename=visitor_20240731011746.jpg`"></div>
-            <div id="dialog-1723828389621" class="dialogV2 right">
-              <div id="chatCard-1723828389621" class="chatCard right">
-                <div id="messageCard-1723828389621" class="messageCard right"><i id="read-1723828389621"
-                                                                                 class="unRead"></i>
-                  <div id="messageBody-1723828389621" class="messageBody right">
-                    <div class="replayContent"><img
-                        @click="showLargePic(`/unit/minio/download?filename=1711881392033_20240817011308.jpg`)"
-                        :src="`/unit/minio/download?filename=1711881392033_20240817011308.jpg`"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-              <img id="avatar-1723828389621" class="constant_img"
-                   :src="`/unit/minio/download?filename=visitor_20240731011746.jpg`"></div>
           </div>
         </div>
         <!-- 气泡栏 -->

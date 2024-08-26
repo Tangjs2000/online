@@ -3,6 +3,7 @@ import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import viteVConsole from "vite-plugin-vconsole";
+import {fileURLToPath, URL} from "node:url";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,7 +21,7 @@ export default defineConfig({
             ],
         },
     },*/
-    publicPath: './',  // 基本路径
+    publicPath: '/',  // 基本路径
     outputDir: 'dist', // 构建时的输出目录
     assetsDir: 'static', // 放置静态资源的目录
     indexPath: 'index.html', // html 的输出路径
@@ -31,7 +32,7 @@ export default defineConfig({
         // VueDevTools(),
         viteVConsole({
             entry: path.resolve('src/main.js'), // 入口文件，或者可以使用这个配置: [path.resolve('src/main.js')]
-            localEnabled: false, // 本地是否启用
+            localEnabled: true, // 本地是否启用
             enabled: true, // 是否启用
             config: {
                 maxLogNumber: 1000,
@@ -41,7 +42,8 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'src')
+            // '@': path.resolve(__dirname, 'src')
+            '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
     server: {
