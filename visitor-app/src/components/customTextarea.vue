@@ -22,7 +22,9 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      cursorFocus: 0,
+    }
   },
   watch: {
     "modelValue": {
@@ -33,11 +35,11 @@ export default {
     }
   },
   methods: {
-    input(h5Content) {
+    input(h5Content, isClearInput) {
       /*  */
-      let element = document.createElement(`i`)
-      element.innerHTML = h5Content;
-
+      /*let element = document.createElement(`i`)
+      element.innerHTML = h5Content;*/
+      let element = document.createTextNode(h5Content);
       let textarea = this.$refs["custom-textarea"];
       textarea.focus();
       const selection = window.getSelection();
@@ -68,31 +70,46 @@ export default {
   },
   mounted() {
     let that = this;
-    this.$refs["custom-textarea"]
-        .addEventListener('input', function (event) {
-          that.$emit('update:modelValue', this.innerText);
-          /* 输入类型 */
-          /*switch (event.inputType) {
-            case "insertCompositionText": {
-              /!* 键盘输入事件 *!/
-              /!*if (!event.data) this.innerHTML = null;
-              else {
-                if (!event.isComposing)
-                  this.innerHTML += event.data;
-              }*!/
-              break;
-            }
-            case "deleteContentBackward": {
-              /!* 键盘回退事件 *!/
-              /!*this.innerHTML = this.innerHTML.toString().substr(0,
-                  this.innerHTML.toString().length ? this.innerHTML.toString().length - 1 : 0);*!/
-              break;
-            }
-            default: {
+    let customTextarea = this.$refs["custom-textarea"];
+    document.addEventListener('selectionchange', function (event) {
+      let selection = window.getSelection();
+      let cursorFocus = 0;
+      let range = selection.getRangeAt(0);
+      let preCursorRange = range.cloneRange();
+      preCursorRange.selectNodeContents(customTextarea);
+      preCursorRange.setEnd(range.startContainer, range.startOffset);
+      cursorFocus = preCursorRange.toString().length;
+      that.cursorFocus = cursorFocus;
+    })
+    customTextarea.addEventListener('input', function (event) {
+      /* 检测只剩下无效标签设置清空内容 */
+      let ignore = ["<br>"];
+      if (ignore.includes(this.innerHTML)) {
+        this.innerHTML = '';
+      }
+      that.$emit('update:modelValue', this.innerText);
+      /* 输入类型 */
+      /*switch (event.inputType) {
+        case "insertCompositionText": {
+          /!* 键盘输入事件 *!/
+          /!*if (!event.data) this.innerHTML = null;
+          else {
+            if (!event.isComposing)
+              this.innerHTML += event.data;
+          }*!/
+          break;
+        }
+        case "deleteContentBackward": {
+          /!* 键盘回退事件 *!/
+          /!*this.innerHTML = this.innerHTML.toString().substr(0,
+              this.innerHTML.toString().length ? this.innerHTML.toString().length - 1 : 0);*!/
+          break;
+        }
+        default: {
 
-            }
-          }*/
-        });
+        }
+      }*/
+    });
   }
 }
 </script>

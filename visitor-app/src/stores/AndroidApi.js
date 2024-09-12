@@ -4,14 +4,16 @@
  * 申请照相机权限
  */
 export const applyCameraPermission = () => {
-    AndroidBridge.applyCameraPermission()
+    AndroidBridge.applyCameraPermission();
+    return true;
 }
 
 /**
  * 申请麦克风权限
  */
 export const applyMicrophonePermission = () => {
-    AndroidBridge.applyMikePermission()
+    AndroidBridge.applyMikePermission();
+    return true;
 }
 
 export const applyPermission = (permissionList) => {

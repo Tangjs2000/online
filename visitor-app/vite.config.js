@@ -4,23 +4,23 @@ import vue from '@vitejs/plugin-vue'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import viteVConsole from "vite-plugin-vconsole";
 import {fileURLToPath, URL} from "node:url";
+import CopyPlugin from "rollup-plugin-copy";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    /*build: {
+    build: {
         rollupOptions: {
             plugins: [
                 CopyPlugin({
                     targets: [
-                        {src: 'mock', dest: 'dist'},
-                        {src: 'icon', dest: 'dist'},
+                        {src: 'public', dest: 'dist'},
                     ],
                     // 如果需要，可以在这里配置更多选项
                     hook: 'writeBundle' // 在构建结束后复制文件
                 }),
             ],
         },
-    },*/
+    },
     publicPath: '/',  // 基本路径
     outputDir: 'dist', // 构建时的输出目录
     assetsDir: 'static', // 放置静态资源的目录

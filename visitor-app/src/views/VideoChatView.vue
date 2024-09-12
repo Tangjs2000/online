@@ -40,7 +40,7 @@
         </div>
         <!-- 旋转摄像头 -->
         <div>
-          <button class="videoUnitItem reverseCamera"></button>
+          <button class="videoUnitItem reverseCamera" @click="turn"></button>
         </div>
       </div>
     </div>
@@ -49,6 +49,8 @@
 
 <script>
 import {WebSocket_V1} from "../stores/chat/WebRTC";
+import {applyCameraPermission, applyMicrophonePermission} from "../stores/AndroidApi";
+import {checkPermissions, Permission, releaseMediaStream} from "../stores/tool/WebRTCTool";
 
 const CONSTANT = {
   SUB: "sub",
@@ -69,8 +71,8 @@ const CONSTANT = {
     RINGING: '/public/prompt/ringing.mp3',
   },
   /* webrtc配置 */
-  WEBRTC_CONFIGURATION : {
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+  WEBRTC_CONFIGURATION: {
+    iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
   }
 }
 export default {
@@ -85,7 +87,18 @@ export default {
         },
         self: {
           video: null,
-          audio: null
+          audio: null,
+          camera: {
+            direction: true,  // true 前置 false 后置
+            configure: {
+              width: undefined,
+              height: undefined,
+              sourceId: 'default',
+              facingMode: {exact: "user"},
+              // torch: false, // 开启闪光灯
+              frameRate: {ideal: 60, max: 120}
+            }
+          }
         }
       },
       active: {
@@ -96,29 +109,88 @@ export default {
     }
   },
   methods: {
+    turn() {
+      let that = this;
+      that.stream.self.camera.configure.facingMode.exact =
+          that.stream.self.camera.configure.facingMode.exact === 'user' ? 'environment' : 'user';
+      navigator.mediaDevices.getUserMedia({
+        video: that.stream.self.camera.configure,
+        audio: false
+      }).then((stream) => {
+        console.log("video:", stream);
+        let selfCanvas = document.getElementById(`mainVideo`);
+        selfCanvas.srcObject = stream;
+        that.stream.self.video = stream
+        if (that.stream.self.camera.configure.facingMode.exact === 'user') {
+          selfCanvas.style.transform = 'scaleX(-1)';
+        } else {
+          selfCanvas.style.transform = '';
+        }
+
+        /* 关流 */
+        try {
+          let selfVideo = this.stream.self.video;
+          let streamArray = [selfVideo];
+          for (let streamItem of streamArray) {
+            if (streamItem === undefined) {
+              console.error("挂机操作,对应流不存在,无须进行当前处理")
+              continue;
+            }
+            streamItem?.audio?.getTracks().forEach(track => {
+              if (track.kind === 'video' || track.kind === 'audio') {
+                track.stop();
+              }
+            })
+            streamItem?.video?.getTracks().forEach(track => {
+              if (track.kind === 'video' || track.kind === 'audio') {
+                track.stop();
+              }
+            })
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }).catch((e) => {
+        console.error("getUserMedia-video失败!!!", e)
+      })
+    },
+    initConfig() {
+      let that = this;
+      /* 初始化配置 */
+      that.stream.self.camera.configure.width = window.innerHeight;
+      that.stream.self.camera.configure.height = window.innerWidth;
+    },
     init() {
       /* 打开媒体流 */
       let that = this;
       /* 打开本人视频|语音消息 */
-      navigator.mediaDevices.getUserMedia({video: true, audio: false})
-          .then((stream) => {
-            let selfCanvas = document.getElementById(`mainVideo`);
-            selfCanvas.srcObject = stream;
-            that.stream.self.video = stream
-            that.stream.mainShowType = CONSTANT.SELF
-          })
-          .catch((e) => {
-            console.error(e)
-          })
+      navigator.mediaDevices.getUserMedia({
+        video: that.stream.self.camera.configure,
+        audio: false
+      }).then((stream) => {
+        console.log("video:", stream);
+        let selfCanvas = document.getElementById(`mainVideo`);
+        selfCanvas.srcObject = stream;
+        that.stream.self.video = stream
+        that.stream.mainShowType = CONSTANT.SELF
+        if (that.stream.self.camera.configure.facingMode.exact === 'user') {
+          selfCanvas.style.transform = 'scaleX(-1)';
+        } else {
+          selfCanvas.style.transform = '';
+        }
+      }).catch((e) => {
+        console.error("getUserMedia-video失败!!!", e)
+      })
       navigator.mediaDevices.getUserMedia({video: false, audio: true})
           .then((stream) => {
+            console.log("audio:", stream);
             let selfAudio = document.getElementById(`selfAudio`);
             selfAudio.srcObject = stream;
             that.stream.self.audio = stream;
             selfAudio.pause();
           })
           .catch((e) => {
-            console.error(e)
+            console.error("getUserMedia-audio失败!!!", e)
           })
 
       /* 设置主副画布切换事件 */
@@ -167,7 +239,7 @@ export default {
      */
     initWebTRC() {
       const configuration = {
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
       };
 
       /* 创建RTCPeer连接 */
@@ -195,6 +267,7 @@ export default {
           .then(stream => {
             stream.getTracks().forEach(track => rtcPeerConn.addTrack(track, stream));
           });
+      navigator.mediaDevices.dispatchEvent()
     },
 
     /* 小框的拖拽 */
@@ -248,35 +321,28 @@ export default {
     /* 挂机 */
     hangUp() {
       let that = this;
+      try {
+        /* 播放挂机提示音 */
+        let systemAudio = document.getElementById(`systemAudio`);
+        systemAudio.src = CONSTANT.SYSTEM_SOUND.HANG_UP;
+        setTimeout(function () {
+          systemAudio.play();
+        }, 500)
 
-      /* 播放挂机提示音 */
-      let systemAudio = document.getElementById(`systemAudio`);
-      systemAudio.src = CONSTANT.SYSTEM_SOUND.HANG_UP;
-      setTimeout(function () {
-        systemAudio.play();
-      }, 500)
-
-      /* 停止音视频流事件处理 */
-      let selfVideo = this.stream.self.video;
-      let selfAudio = this.stream.self.audio;
-      let remoteVideo = this.stream.remote.video;
-      let remoteAudio = this.stream.remote.audio;
-      let streamArray = [selfVideo, selfAudio, remoteVideo, remoteAudio];
-      for (let streamItem of streamArray) {
-        if (streamItem === undefined) {
-          console.error("挂机操作,对应流不存在,无须进行当前处理")
-          continue;
-        }
-        this.stream.self.audio.getTracks().forEach(track => {
-          if (track.kind === 'video' || track.kind === 'audio') {
-            track.stop();
-          }
-        })
+        /* 停止音视频流事件处理 */
+        let selfVideo = this.stream.self.video;
+        let selfAudio = this.stream.self.audio;
+        let remoteVideo = this.stream.remote.video;
+        let remoteAudio = this.stream.remote.audio;
+        let mediaStreams = [selfVideo, selfAudio, remoteVideo, remoteAudio];
+        releaseMediaStream(mediaStreams);
+      } catch (e) {
+        console.error("挂机异常！！", e);
       }
-
+      this.MediaStreamTrack && this.MediaStreamTrack.stop();
       setTimeout(function () {
         /* 页面跳转到聊天页 */
-        that.$router.push({name: 'online'})
+        that.rollback();
       }, 1300)
     },
 
@@ -341,16 +407,41 @@ export default {
           console.error("内置事件,不合法的操作!!! operate:" + operate)
         }
       }
+    },
+    rollback() {
+      window.history.back();
     }
   },
   mounted() {
-    this.init();
-    // this.drag();
-
     let that = this
-    setTimeout(function () {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      try {
+        let camera = applyCameraPermission();
+        let micPhone = applyMicrophonePermission();
+      } catch (e) {
+        console.error("申请安卓权限失败！！！", e)
+      }
+      checkPermissions([Permission.camera, Permission.microphone], false)
+          .then(res => {
+            if (res) that.init();
+            else {
+              /* todo 引导客户手动打开权限 */
+              that.rollback();
+            }
+          })
+          .catch(e => {
+            console.error("权限检查失败！！！")
+            that.rollback();
+          })
+    } else {
+      console.log("当前设备无法打开音视频！！！")
+      this.rollback();
+    }
+
+    // this.drag();
+    /*setTimeout(function () {
       that.connSuccess();
-    }, 10000)
+    }, 10000)*/
   }
 }
 </script>
@@ -373,7 +464,6 @@ export default {
   height: 30%;
   object-fit: cover;
   z-index: 999;
-  transform: scaleX(-1);
   touch-action: none;
   cursor: move; /* 更改鼠标光标表示可拖拽 */
 }

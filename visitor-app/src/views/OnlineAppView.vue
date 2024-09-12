@@ -92,12 +92,11 @@
           <i class="inputSwitch" @click="showUnitTool(`emoji`)">
             <img src="/public/svg/unit_emoji.svg"/>
           </i>
-          <button v-if="inputText" id="sendButton" class="sendButton"
+          <button v-if="inputText && inputText.length > 0" id="sendButton" class="sendButton"
                   @click="sendMessage">发送
           </button>
           <!-- 组件工具(视频、文件) -->
-          <i v-else id="unitTool" class="inputSwitch"
-             @click="showUnitTool(`extend`)">
+          <i v-else id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
             <img src="/public/svg/unit_extend.svg">
           </i>
         </div>
@@ -228,7 +227,7 @@ export default {
       }
       this.initConfig.unitModule = undefined;
       switch (unitModule) {
-        /* 输入方式切换(文本输入、音频输入) */
+          /* 输入方式切换(文本输入、音频输入) */
         case InputMode.speak: {
           console.log("InputMode.speak")
           mic_open();
@@ -240,7 +239,7 @@ export default {
           this.initConfig.inputMode = InputMode.keyboard;
           break;
         }
-        /* 展示组件|表情包 */
+          /* 展示组件|表情包 */
         case UnitModule.extend: {
           let unitBar = document.getElementById(`unitBar`);
           unitBar.style.height = '170px';
