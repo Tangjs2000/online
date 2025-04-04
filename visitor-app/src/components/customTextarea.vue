@@ -1,6 +1,6 @@
 <template>
   <div id="custom-textarea" ref="custom-textarea" class="textarea" contenteditable="true"
-       :value="modelValue" :placeholder="placeholder">
+       :placeholder="placeholder" v-html="modelValue">
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
       default: "请输入......"
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       cursorFocus: 0,
@@ -30,15 +31,14 @@ export default {
     "modelValue": {
       deep: true,
       handler: function (val, oldVal) {
-        this.$emit('update:modelValue', val);
+        let textarea = this.$refs['custom-textarea']
+        console.log(textarea)
+        // textarea.innerHTML = val;
       }
     }
   },
   methods: {
     input(h5Content, isClearInput) {
-      /*  */
-      /*let element = document.createElement(`i`)
-      element.innerHTML = h5Content;*/
       let element = document.createTextNode(h5Content);
       let textarea = this.$refs["custom-textarea"];
       textarea.focus();
@@ -51,21 +51,7 @@ export default {
       selection.removeAllRanges();  // 移除所有选中区
       selection.addRange(range);  // 添加选中区
       this.$emit('update:modelValue', textarea.innerHTML);  // 更新modelValue
-
-      /*box.focus();
-      // 创建一个新的选区
-      var selection = window.getSelection();
-      // 如果光标位置原来就存在，就用原来的。
-      // 原来不存在，就重新创建一个
-      var range = currentRange ?? selection.getRangeAt(0);
-      // 插入表情图标
-      range.insertNode(img.cloneNode());
-      // 插入后，光标显示在表情图片后面
-      range.collapse();
-      // 移除其他的区域
-      selection.removeAllRanges();
-      // 把带有表情图片的区域插入到选区内
-      selection.addRange(range);*/
+      console.log(textarea.innerHTML)
     }
   },
   mounted() {
@@ -88,27 +74,6 @@ export default {
         this.innerHTML = '';
       }
       that.$emit('update:modelValue', this.innerText);
-      /* 输入类型 */
-      /*switch (event.inputType) {
-        case "insertCompositionText": {
-          /!* 键盘输入事件 *!/
-          /!*if (!event.data) this.innerHTML = null;
-          else {
-            if (!event.isComposing)
-              this.innerHTML += event.data;
-          }*!/
-          break;
-        }
-        case "deleteContentBackward": {
-          /!* 键盘回退事件 *!/
-          /!*this.innerHTML = this.innerHTML.toString().substr(0,
-              this.innerHTML.toString().length ? this.innerHTML.toString().length - 1 : 0);*!/
-          break;
-        }
-        default: {
-
-        }
-      }*/
     });
   }
 }

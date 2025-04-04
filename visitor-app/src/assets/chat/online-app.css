@@ -37,16 +37,17 @@
 }
 
 /* 分割线 */
-.cross-mark{
+.cross-mark {
     display: flex;
     width: 85%;
 }
+
 .cross-mark::before,
-.cross-mark::after{
+.cross-mark::after {
     content: '';
     flex: 1 1;
     border-bottom: 2px dashed #000000;
-    margin:auto;
+    margin: auto;
 }
 
 .appBar {
@@ -101,6 +102,7 @@
     margin-right: 5px;
     align-items: center;
 }
+
 .dialogV2 {
     margin-top: 3px;
     margin-bottom: 7px;
@@ -109,20 +111,21 @@
     align-items: flex-start;
 
 
-
     /*position: relative;
     margin-left: 5px;
     margin-right: 5px;*/
 
 }
-.dialogV2.left{
+
+.dialogV2.left {
     justify-content: flex-start;
 }
-.dialogV2.right{
+
+.dialogV2.right {
     justify-content: flex-end;
 }
 
-.dialogV2 button{
+.dialogV2 button {
     background-color: transparent;
     color: #000000;
     border: 0;
@@ -188,8 +191,11 @@
 
 .sys_notice {
     position: sticky;
+    top: 0;
     width: 100%;
-    height: 30px;
+    height: 2rem;
+    padding: 0.3rem 0.5rem;
+    z-index: 999;
 }
 
 .replayContent {
@@ -197,6 +203,7 @@
     /*max-height: 100px; !* 设定最大高度，超出部分将会被隐藏 *!*/
     transition: max-height 0.3s ease-out; /* 添加过渡效果 */
 }
+
 .replayContent.collapsed {
     max-height: 80px; /* 当折叠时，最大高度设置为0 */
 }

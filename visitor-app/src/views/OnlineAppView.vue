@@ -20,96 +20,15 @@
     <div id="appBar" class="appBar">
       <!-- 1、对话栏 -->
       <div id="dialogBox" class="dialogBox">
-        <!-- 标题 -->
-        <div id="topicBar" class="topicBar">
-          <img v-if="Basic.logo" :src="Basic.logo" class="topicLogo"/>
-          <span v-if="Basic.title" class="topicTitle">{{ Basic.title }}</span>
-        </div>
+        <!-- 标题栏 -->
+        <chat-topic-bar v-model="Basic"/>
         <!-- 对话消息栏 -->
-        <div id="dialogMsgBar" class="dialogMsgBar">
-          <!-- 系统公告 -->
-          <!--          <div class="sys_notice">
-                      <t-notice-bar style="height: 30px;padding: 5px 16px" visible marquee
-                                    content="阿达亲请问请问请问请问科技七五九二七五九二就期间恶趣味驱蚊器微乎其微" />
-                    </div>-->
-          <!-- 查看历史消息 -->
-          <div id="viewHistoryChat" class="dialog">
-            <button id="gainHistoryChat">查看历史消息</button>
-          </div>
-          <!-- 历史消息 -->
-          <div id="historyChat"></div>
-          <!-- 历史消息分割线 -->
-          <div id="historyDivider" class="dialogV2">
-            <div class="systemCard">
-              <div class="cross-mark">
-                <span style="margin:0 10px">以下是新消息</span>
-              </div>
-            </div>
-          </div>
-          <!-- 新消息(最新会话消息) -->
-          <div id="newChat">
-            <div id="test" class="dialogV2">
-
-            </div>
-            <!-- 撤回消息 todo 本人撤回和对方撤回 不同展示处理-->
-            <div id="revoke" class="dialogV2">
-              <div class="systemCard">你撤回了一条消息
-                <span style="color: darkorange;margin: 0 5px" @click="reEdit('123123')">重新编辑</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <chat-dialog-bar v-model:notice="Basic.notice" v-model="dialogMsg"
+                         @reEdit="reEdit" @revoke=""/>
         <!-- 气泡栏 -->
-        <div id="bubbleBar" class="bubbleBar">
-          <ol id="bubble" class="bubble"></ol>
-        </div>
+        <chat-bubble-bar v-model:bubble="Basic.bubble"/>
         <!-- 工具栏 -->
-        <div id="toolbar" class="toolbar">
-          <i id="inputSwitch" class="inputSwitch" @click.stop>
-            <!-- object标签会阻止click事件 todo 弃用 -->
-            <!--<object v-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.TEXT"
-                    class="inputSwitch"
-                    type="image/svg+xml" data="/public/svg/unit_speak.svg" style="fill: red"/>
-            <object v-else-if="initConfig.inputBoxType === TOOLBAR_INPUTBOX_TYPE.VOICE"
-                    class="inputSwitch"
-                    type="image/svg+xml" data="/public/svg/unit_keyboard.svg" style="fill: red"/>-->
-            <img style="flex: 1;height:26px" v-if="initConfig.inputMode === `keyboard`"
-                 @click="showUnitTool(`speak`)"
-                 src="/public/svg/unit_speak.svg"/>
-            <img v-else-if="initConfig.inputMode === `speak`"
-                 @click="showUnitTool(`keyboard`)"
-                 src="/public/svg/unit_keyboard.svg"/>
-          </i>
-          <div class="input">
-            <custom-textarea id="textInput" ref="textInput" class="textInput"
-                             v-model="inputText" placeholder="请输入您的问题,我来为您解答~"
-                             v-show="initConfig.inputMode === `keyboard`">
-            </custom-textarea>
-            <button id="speakButton" class="voiceInput"
-                    v-show="initConfig.inputMode === `speak`">
-            </button>
-          </div>
-          <i class="inputSwitch" @click="showUnitTool(`emoji`)">
-            <img src="/public/svg/unit_emoji.svg"/>
-          </i>
-          <button v-if="inputText && inputText.length > 0" id="sendButton" class="sendButton"
-                  @click="sendMessage">发送
-          </button>
-          <!-- 组件工具(视频、文件) -->
-          <i v-else id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
-            <img src="/public/svg/unit_extend.svg">
-          </i>
-        </div>
-        <div v-show="initConfig.unitModule" id="unitBar" class="unitBar">
-          <div v-show="initConfig.unitModule === `extend`" id="extendUnit" class="extendUnit"></div>
-          <div v-show="initConfig.unitModule === `emoji`" id="emojiUnit" class="emojiUnit">
-            <div id="emojiTab" class="emojiTab"></div>
-            <div class="emojiContent">
-              <div id="emojiBody" class="emojiBody"></div>
-              <div id="emojiBody-backspace" class="emojiBody-backspace" @click="clearInput"></div>
-            </div>
-          </div>
-        </div>
+        <chat-tool-bar @send="sendMessage"/>
       </div>
       <!-- 信息栏 -->
       <div id="informationBox" v-if="initConfig.informationBox.show" class="informationBox"></div>
@@ -141,10 +60,14 @@ import {h5ContentService, ResourceMode} from "../stores/chat/H5ContentService";
 import {mic_open} from "../stores/chat/HoldToTalk";
 import CustomTextarea from "../components/customTextarea.vue";
 import Hammer from 'hammerjs';
+import ChatTopicBar from "./chat/ChatTopicBar.vue";
+import ChatDialogBar from "./chat/ChatDialogBar.vue";
+import ChatBubbleBar from "./chat/ChatBubbleBar.vue";
+import ChatToolBar from "./chat/ChatToolBar.vue";
 
 export default {
   name: "online-app",
-  components: {CustomTextarea},
+  components: {ChatToolBar, ChatBubbleBar, ChatDialogBar, ChatTopicBar, CustomTextarea},
   data() {
     return {
       Basic,
@@ -215,65 +138,6 @@ export default {
         }, 100)
       });
     },
-    /**
-     * 控制组件切换
-     *
-     * @param unitModule
-     */
-    showUnitTool(unitModule) {
-      if (this.initConfig.unitModule === unitModule) {
-        this.initConfig.unitModule = undefined;
-        return;
-      }
-      this.initConfig.unitModule = undefined;
-      switch (unitModule) {
-          /* 输入方式切换(文本输入、音频输入) */
-        case InputMode.speak: {
-          console.log("InputMode.speak")
-          mic_open();
-          this.initConfig.inputMode = InputMode.speak;
-          break;
-        }
-        case InputMode.keyboard: {
-          console.log("InputMode.keyboard")
-          this.initConfig.inputMode = InputMode.keyboard;
-          break;
-        }
-          /* 展示组件|表情包 */
-        case UnitModule.extend: {
-          let unitBar = document.getElementById(`unitBar`);
-          unitBar.style.height = '170px';
-          unitBar.style.maxHeight = '170px';
-          this.initConfig.unitModule = UnitModule.extend
-          break;
-        }
-        case UnitModule.emoji: {
-          let unitBar = document.getElementById(`unitBar`);
-          unitBar.style.height = '190px';
-          unitBar.style.maxHeight = '190px';
-          emojiService.initEmoji();
-          this.initConfig.unitModule = UnitModule.emoji
-          break;
-        }
-        default: {
-
-        }
-      }
-      scrollButton();
-      /* 隐藏软键盘 */
-      document.getElementById('textInput').blur();
-    },
-    /* 输入内容 */
-    h5Input(h5Content) {
-      this.$refs.textInput.input(h5Content);
-    },
-    /* 清除输入框内容 */
-    clearInput() {
-      let inputBox = document.getElementById(`textInput`);
-      inputBox.innerHTML = null
-      this.inputText = null;
-    },
-
     /* 撤回消息按钮处理事件-重新编辑 */
     reEdit(oldMessage) {
       this.initConfig.inputMode = InputMode.keyboard;
@@ -308,7 +172,6 @@ export default {
       let inputBox = document.getElementById(`textInput`);
       inputText = inputText instanceof String && inputText ? inputText : inputBox.innerHTML;
       if (inputText?.length === 0) return; // 不允许发送空消息
-      this.clearInput();
       chatService.sendRichText(inputText, ChatScene.robot);
     },
 
@@ -381,33 +244,22 @@ export default {
       await this.init();
       await gainBasicConfiguration()
           .then(result => {
-            bubbles = result?.bubbles;
+            // bubbles = result?.bubbles;
             unitTools = result?.unitTools;
           })
 
-      /* 2、动态初始化浏览器页签logo和标题 */
-      document.title = Basic.title;
-      let logoLink = document.querySelector("link[rel='icon']");
-      if (logoLink) logoLink.href = Basic.logo;
-      else {
-        logoLink = document.createElement("link");
-        logoLink.rel = "icon";
-        logoLink.href = Basic.logo;
-        document.head.appendChild(logoLink);
-      }
-
-      /* 3、初始化气泡栏|胶囊栏 */
-      let bubbleEl = document.getElementById(`bubble`);
-      if (bubbles) {
-        for (let bubble of bubbles) {
-          let bubbleLi = document.createElement(`li`);
-          bubbleLi.innerText = bubble;
-          bubbleLi.addEventListener(`click`, function () {
-            chatService.sendRichText(bubble, ChatScene.robot);
-          })
-          bubbleEl.appendChild(bubbleLi);
+      /* 2、动态初始化浏览器页签logo和标题 todo 移至到对应组件 */
+      /* 3、初始化气泡栏|胶囊栏 todo 移至到对应组件 */
+      /*setInterval(() => {
+        let content = []
+        for (let i = 0; i < 8; i++) {
+          content.push("测试问题" + Math.ceil(Math.random() * 1000))
         }
-      }
+        that.Basic.bubble = {
+          show: false,
+          content
+        };
+      }, 5000)*/
 
       /* 4、初始化工具单元栏 */
       if (unitTools && unitTools.length > 0) {
@@ -567,7 +419,6 @@ export default {
     this.Basic = Basic;
     this.initBasicConfiguration();
     let fileCardMsg = document.getElementById("fileCardMsg");
-    window.globalInput = this.h5Input;
   }
 }
 </script>

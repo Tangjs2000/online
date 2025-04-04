@@ -1,7 +1,6 @@
 import path from 'path'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
-import VueDevTools from 'vite-plugin-vue-devtools'
 import viteVConsole from "vite-plugin-vconsole";
 import {fileURLToPath, URL} from "node:url";
 import CopyPlugin from "rollup-plugin-copy";
@@ -32,8 +31,8 @@ export default defineConfig({
         // VueDevTools(),
         viteVConsole({
             entry: path.resolve('src/main.js'), // 入口文件，或者可以使用这个配置: [path.resolve('src/main.js')]
-            localEnabled: true, // 本地是否启用
-            enabled: true, // 是否启用
+            localEnabled: false, // 本地是否启用
+            enabled: false, // 是否启用
             config: {
                 maxLogNumber: 1000,
                 theme: 'light' // 主题颜色 'dark'|'light'
@@ -74,7 +73,13 @@ export default defineConfig({
                 pathRewrite: {
                     '^/unit': '/unit'
                 }
-            }
+            },
+            '/ai': {
+                target: `http://127.0.0.1:8010`,
+                changeOrigin: true,
+                ws: true,
+                logLevel: 'error'
+            },
         }
     }
 })
