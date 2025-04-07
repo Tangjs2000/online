@@ -16,11 +16,9 @@
     <!-- 输入框 -->
     <div class="input">
       <!-- 文本输入 -->
-      <custom-textarea id="textInput" ref="textarea" class="textInput"
-                       @mention="mention"
-                       v-model="inputText" placeholder="请输入您的问题,我来为您解答~"
-                       v-show="config.inputMode === `keyboard`">
-      </custom-textarea>
+      <div id="textarea" class="textInput"
+           v-show="config.inputMode === `keyboard`">
+      </div>
       <!-- 语音输入 -->
       <button id="speakButton" class="voiceInput"
               v-show="config.inputMode === `speak`">
@@ -30,8 +28,8 @@
     <i class="inputSwitch" @click="showUnitTool(`emoji`)">
       <img src="/public/svg/unit_emoji.svg"/>
     </i>
-    <button v-if="inputText && inputText.length > 0" id="sendButton" class="sendButton"
-            @click="()=>{this.$emit('send', inputText);this.clearInput()}">发送
+    <button v-if="textarea.content?.trim().length > 0" id="sendButton" class="sendButton"
+            @click="()=>{this.$emit('send', textarea.content);this.inputClear()}">发送
     </button>
     <!-- 组件工具(视频、文件) -->
     <i v-else id="unitTool" class="inputSwitch" @click="showUnitTool(`extend`)">
@@ -44,7 +42,7 @@
       <div id="emojiTab" class="emojiTab"></div>
       <div class="emojiContent">
         <div id="emojiBody" class="emojiBody"></div>
-        <div id="emojiBody-backspace" class="emojiBody-backspace" @click="clearInput"></div>
+        <div id="emojiBody-backspace" class="emojiBody-backspace" @click="this.inputClear()"></div>
       </div>
     </div>
   </div>
@@ -69,6 +67,8 @@ import {scrollButton} from "../../stores/chat/chat";
 import CustomTextarea from "../../components/customTextarea.vue";
 import {TOOLBAR_INPUTBOX_TYPE} from "../../stores/chat/onlineAppConstant";
 import {pinyin} from 'pinyin-pro';
+import Editor from '@toast-ui/editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 export default {
   name: "ChatToolBar",
@@ -101,7 +101,10 @@ export default {
           content: []
         }
       },
-      inputText: ''
+      textarea: {
+        instance: null,
+        content: '',
+      },
     }
   },
   methods: {
@@ -204,27 +207,68 @@ export default {
       /* 隐藏软键盘 */
       document.getElementById('textInput').blur();
     },
+  },
+  watch: {
+    'textarea.content': {
+      deep: true,
+      handler(newValue, oldValue) {
+        console.log(newValue)
+      }
+    }
+  },
+  mounted() {
+    /* 初始化富文本输入框 */
+    let that = this;
+    const textarea = new Editor({
+      el: document.getElementById('textarea'),
+      toolbarItems: [],
+      hideModeSwitch: true,   // 隐藏模式切换
+      usageStatistics: false, // 禁用使用统计
+      minHeight: '36px',
+      height: 'auto',
+      initialEditType: 'wysiwyg', // markdown 或 wysiwyg
+      previewStyle: 'vertical', // vertical编辑样式，还支持tab切换的形式
+      placeholder: '请输入您的问题,我来为您解答~',
+      initialValue: that.textarea.content,
+      events: {
+        change: () => {
+          that.textarea.content = textarea.getMarkdown() ? textarea.getHTML() : '';
+        }
+      }
+    });
+    textarea.moveCursorToEnd();
+    that.textarea.instance = textarea;
+    /* 外部输入事件监听 */
     /**
      * 输入内容
      */
-    h5Input(h5Content) {
-      this.$refs.textarea.input(h5Content);
-    },
+    window.globalInput = this.h5Input = (inputText, type) => {
+      textarea.changeMode('wysiwyg');
+      // textarea.insertText(inputText)
+      if ('img' === type) {
+        textarea.exec('addImage', {
+          imageUrl: inputText,  // 图片URL（必需）
+          altText: '替代文本',           // 图片alt文本
+          width: '1.8rem',                // 图片宽度（可选）
+          height: '1.8rem',                // 图片高度（可选）
+        });
+      }
+    }
     /**
      * 清除输入框内容
      */
-    clearInput() {
-      let inputBox = document.getElementById(`textInput`);
-      inputBox.innerHTML = null
-      this.inputText = null;
-    },
-  },
-  mounted() {
-    window.globalInput = this.h5Input;
+    window.globalInputClear = this.inputClear = () => {
+      this.textarea.content = '';
+      textarea.setHTML(this.textarea.content);
+    }
+
   }
 }
 </script>
 
+<style>
+@import url(../../assets/textarea_toast.css);
+</style>
 <style scoped>
 @import url(../../assets/chat/tool-bar.css);
 @import url(../../assets/chat/emoji.css);

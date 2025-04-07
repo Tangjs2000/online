@@ -168,9 +168,9 @@ export default {
      * 发送消息
      */
     sendMessage(inputText) {
-      let dialogMsgBar = document.getElementById(`dialogMsgBar`);
+      /*let dialogMsgBar = document.getElementById(`dialogMsgBar`);
       let inputBox = document.getElementById(`textInput`);
-      inputText = inputText instanceof String && inputText ? inputText : inputBox.innerHTML;
+      inputText = inputText instanceof String && inputText ? inputText : inputBox.innerHTML;*/
       if (inputText?.length === 0) return; // 不允许发送空消息
       chatService.sendRichText(inputText, ChatScene.robot);
     },
@@ -198,13 +198,13 @@ export default {
       }
 
       /* 2、初始化页面配置 */
-      let textInput = document.getElementById("textInput");
+      /*let textInput = document.getElementById("textInput");
       textInput.addEventListener('click', () => {
-        /* 输入框获取焦点事件 */
+        /!* 输入框获取焦点事件 *!/
         textInput.focus()
       });
       textInput.addEventListener('focus', () => {
-        /* 关闭组件显示 */
+        /!* 关闭组件显示 *!/
         this.initConfig.unitModule = undefined;
       })
       textInput.addEventListener('keydown', function (event) {
@@ -219,7 +219,7 @@ export default {
           // 阻止默认行为，即阻止输入法弹出
           event.preventDefault();
         }
-      });
+      });*/
 
       /* 生成个人信息 */
       let historyUserinfo = localStorage.getItem(`userinfo`);

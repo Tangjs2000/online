@@ -110,7 +110,7 @@ setTimeout(() => {
 /**
  * 自定义Html5
  */
-customElements.define('mention', class Mention extends HTMLElement {
+/*customElements.define('mention', class Mention extends HTMLElement {
     constructor() {
         super();
         // 元素功能代码
@@ -146,4 +146,4 @@ customElements.define('mention', class Mention extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `<p>自定义元素内容</p>`;
     }
-})
+})*/

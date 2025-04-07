@@ -213,7 +213,7 @@ export class ChatImpl implements Chat {
      * @param str
      */
     public inputText(str, canClear) {
-        window.globalInput(str);
+        window.globalInput(str, canClear);
     }
 
     public playWavChatId: string;
@@ -342,9 +342,11 @@ export class EmojiServiceImpl implements EmojiService {
                 element.width = 34;
                 element.height = 34;
                 element.alt = emojiName;
+                element.contentEditable = 'false';
                 element.addEventListener("click", () => {
-                    chatService.inputText(element.outerHTML, false);
-                    document.getElementById('textInput').blur();
+                    // chatService.inputText(element.outerHTML, false);
+                    chatService.inputText(element.src, 'img');
+                    // document.getElementById('textInput').blur();
                 })
                 emojiBody.appendChild(element);
             }

@@ -1,0 +1,26 @@
+.toastui-editor-toolbar {
+    display: none;
+}
+
+.toastui-editor-defaultUI .ProseMirror {
+    padding: 0;
+}
+
+.toastui-editor-ww-container {
+    padding: 0;
+}
+
+.toastui-editor-contents {
+    padding: 0;
+    font-size: 1.0rem; /* 设置默认字体大小 */
+    max-height: 100px;
+}
+
+.toastui-editor-main-container img {
+    width: 1.8rem;
+    height: 1.8rem;
+}
+
+.ProseMirror .toastui-editor-contents p {
+    display: inline;
+}
