@@ -1,0 +1,20 @@
+mention {
+    /* 与a标签相似的默认样式 */
+    color: #0366d6;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline;
+}
+
+mention:hover {
+    text-decoration: underline;
+}
+
+mention:active {
+    color: #052b6c;
+}
+
+mention:focus {
+    outline: none;
+    text-decoration: underline;
+}

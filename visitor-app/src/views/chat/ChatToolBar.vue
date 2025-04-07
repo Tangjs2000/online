@@ -16,7 +16,8 @@
     <!-- 输入框 -->
     <div class="input">
       <!-- 文本输入 -->
-      <custom-textarea id="textInput" ref="textInput" class="textInput"
+      <custom-textarea id="textInput" ref="textarea" class="textInput"
+                       @mention="mention"
                        v-model="inputText" placeholder="请输入您的问题,我来为您解答~"
                        v-show="config.inputMode === `keyboard`">
       </custom-textarea>
@@ -47,6 +48,18 @@
       </div>
     </div>
   </div>
+
+  <t-popup v-model="config.mention.show" placement="bottom" style="height: 70%">
+    <t-indexes :index-list="config.mention.indexes">
+      <template v-for="item in config.mention.content" :key="item.index">
+        <t-indexes-anchor :index="item.index"/>
+        <t-cell-group>
+          <t-cell v-for="(val, i) in item.children" :key="i" :title="val.label"
+                  @click="mentionConfirm(val)"/>
+        </t-cell-group>
+      </template>
+    </t-indexes>
+  </t-popup>
 </template>
 
 <script>
@@ -55,6 +68,7 @@ import {mic_open} from "../../stores/chat/HoldToTalk";
 import {scrollButton} from "../../stores/chat/chat";
 import CustomTextarea from "../../components/customTextarea.vue";
 import {TOOLBAR_INPUTBOX_TYPE} from "../../stores/chat/onlineAppConstant";
+import {pinyin} from 'pinyin-pro';
 
 export default {
   name: "ChatToolBar",
@@ -80,12 +94,68 @@ export default {
         inputMode: `keyboard`,
         inputBoxType: `text`,
         inputText: ``,
-        emojiTab: `default`
+        emojiTab: `default`,
+        mention: {
+          show: false,
+          indexes: [],
+          content: []
+        }
       },
       inputText: ''
     }
   },
   methods: {
+    /**
+     * 提及功能
+     * @param data
+     */
+    mention(data) {
+      let mention = [
+        {label: '所有人', value: '@all'},
+        {label: '机器人', value: '@robot'},
+        {label: '助手', value: '@aide'}
+      ]
+
+      /* 2、转换成索引列表 */
+      const grouped = {};
+      mention.forEach(item => {
+        let label = item?.label;
+        if (label && typeof label === 'string') {
+          /* 获取首字母 */
+          const letter = pinyin(label.charAt(0), {
+            pattern: 'first',
+            toneType: 'none'
+          }).toUpperCase()
+          if (!grouped[letter]) {
+            grouped[letter] = [];
+          }
+          grouped[letter].push(item);
+        }
+      })
+
+      /* 3、按字母顺序排序 */
+      const sortedLetters = Object.keys(grouped).sort();
+      this.config.mention.content = sortedLetters.map(letter => ({
+        index: letter,
+        children: grouped[letter]
+      }));
+      this.config.mention.indexes = sortedLetters;
+      this.config.mention.show = true;
+    },
+    /**
+     * 提及确认
+     * @param data 选中的值
+     */
+    mentionConfirm(data) {
+      this.config.mention.show = false;
+      let label = data.label;
+      let value = data.value;
+      let aElement = document.createElement('mention')
+      aElement.innerText = '@' + label;
+      aElement.href = value;
+      this.h5Input(aElement.outerHTML)
+    },
+
     /**
      * 控制组件切换
      *
@@ -138,8 +208,7 @@ export default {
      * 输入内容
      */
     h5Input(h5Content) {
-      this.$refs.textInput.input(h5Content);
-      // this.inputText = h5Content
+      this.$refs.textarea.input(h5Content);
     },
     /**
      * 清除输入框内容

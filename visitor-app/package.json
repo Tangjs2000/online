@@ -10,12 +10,17 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@tiptap/extension-mention": "^2.11.7",
+    "@tiptap/pm": "^2.11.7",
+    "@tiptap/starter-kit": "^2.11.7",
+    "@tiptap/vue-3": "^2.11.7",
     "axios": "0.18.1",
     "element-plus": "^2.6.3",
     "fingerprintjs2": "^2.1.4",
     "hammerjs": "^2.0.8",
     "js-audio-recorder": "^1.0.7",
     "pinia": "^2.1.7",
+    "pinyin-pro": "^3.26.0",
     "qs": "^6.12.0",
     "quill": "^2.0.0-rc.5",
     "recorder-js": "^1.0.7",

@@ -1,6 +1,6 @@
 <template>
-  <div id="custom-textarea" ref="custom-textarea" class="textarea" contenteditable="true"
-       :placeholder="placeholder" v-html="modelValue">
+  <div id="custom-textarea" ref="textarea" class="textarea" contenteditable="true"
+       :placeholder="placeholder">
   </div>
 </template>
 
@@ -10,7 +10,7 @@ export default {
   props: {
     ref: {
       type: String,
-      default: "custom-textarea",
+      default: "textarea",
     },
     modelValue: {
       type: String,
@@ -21,7 +21,7 @@ export default {
       default: "请输入......"
     }
   },
-  emits: ['update:modelValue'],
+  emits: ['mention', 'update:modelValue'],
   data() {
     return {
       cursorFocus: 0,
@@ -30,48 +30,54 @@ export default {
   watch: {
     "modelValue": {
       deep: true,
-      handler: function (val, oldVal) {
-        let textarea = this.$refs['custom-textarea']
-        console.log(textarea)
-        // textarea.innerHTML = val;
+      handler: function (newVal, oldVal) {
       }
     }
   },
   methods: {
     input(h5Content, isClearInput) {
-      let element = document.createTextNode(h5Content);
-      let textarea = this.$refs["custom-textarea"];
+      // let element = document.createTextNode(h5Content);
+      const element = document.createElement('i');
+      element.innerHTML = h5Content
+      let textarea = this.$refs.textarea;
       textarea.focus();
       const selection = window.getSelection();
       const range = selection.getRangeAt(0);
       /* 插入待输入内容 */
       range.insertNode(element);
-      // range.setStartAfter(h5Content);
       range.collapse(false);  // 光标显示在插入内容位置 true之前、false之后
       selection.removeAllRanges();  // 移除所有选中区
       selection.addRange(range);  // 添加选中区
       this.$emit('update:modelValue', textarea.innerHTML);  // 更新modelValue
-      console.log(textarea.innerHTML)
+    },
+    delete() {
+      this.$emit('update:modelValue', textarea.innerHTML);  // 更新modelValue
     }
   },
   mounted() {
     let that = this;
-    let customTextarea = this.$refs["custom-textarea"];
+    let textarea = this.$refs.textarea;
     document.addEventListener('selectionchange', function (event) {
       let selection = window.getSelection();
       let cursorFocus = 0;
       let range = selection.getRangeAt(0);
       let preCursorRange = range.cloneRange();
-      preCursorRange.selectNodeContents(customTextarea);
+      preCursorRange.selectNodeContents(textarea);
       preCursorRange.setEnd(range.startContainer, range.startOffset);
       cursorFocus = preCursorRange.toString().length;
       that.cursorFocus = cursorFocus;
     })
-    customTextarea.addEventListener('input', function (event) {
+    /* 富文本输入框事件监听 */
+    textarea.addEventListener('input', function (event) {
+      console.log("textarea_input：", event)
       /* 检测只剩下无效标签设置清空内容 */
       let ignore = ["<br>"];
       if (ignore.includes(this.innerHTML)) {
         this.innerHTML = '';
+      }
+      /* todo 提及功能 */
+      if ('insertText' === event.inputType && '@' === event.data) {
+        that.$emit('mention', true)
       }
       that.$emit('update:modelValue', this.innerText);
     });
