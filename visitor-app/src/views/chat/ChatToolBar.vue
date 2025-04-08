@@ -69,7 +69,6 @@ import {TOOLBAR_INPUTBOX_TYPE} from "../../stores/chat/onlineAppConstant";
 import {pinyin} from 'pinyin-pro';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-// import '@toast-ui/editor/dist/i18n/zh-cn.js';
 import {InputType} from "../../stores/chat/RichTextInput.ts"
 
 export default {
@@ -106,6 +105,7 @@ export default {
       textarea: {
         instance: null,
         content: '',
+        mentions: [],
       },
     }
   },
@@ -153,15 +153,7 @@ export default {
      */
     mentionConfirm(data) {
       this.config.mention.show = false;
-      let label = data.label;
-      let value = data.value;
-      /*let aElement = document.createElement('mention')
-      aElement.innerText = '@' + label;
-      aElement.href = value;
-      this.h5Input({
-        type: InputType.RICH_TEXT,
-        content: aElement.outerHTML,
-      }, false)*/
+      const {label, value} = data;
       this.h5Input({
         type: InputType.MENTION,
         content: '@' + label,
@@ -217,15 +209,19 @@ export default {
       }
       scrollButton();
       /* 隐藏软键盘 */
-      document.getElementById('textInput').blur();
+      // document.getElementById('textInput').blur();
     },
   },
   watch: {
     'textarea.content': {
       deep: true,
       handler(newValue, oldValue) {
-        if (!newValue) {
-          // this.textarea.instance. = '';
+        if (newValue) {
+          let mentions = this.textarea.mentions
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(newValue, 'text/html')
+          const mentionTags = doc.querySelectorAll('[data-type="mention"]');
+          console.log(mentionTags)
         }
       }
     }
@@ -239,7 +235,7 @@ export default {
       toolbarItems: [],
       hideModeSwitch: true,   // 隐藏模式切换
       usageStatistics: true, // 禁用使用统计
-      useDefaultHTMLSanitizer: false, // 禁用默认净化器
+      useDefaultHTMLSanitizer: true, // 禁用默认净化器
       extendedAutolinks: true,
       minHeight: '36px',
       height: 'auto',
@@ -258,10 +254,10 @@ export default {
         }
       },
       hooks: {},
-      /*customHTMLSanitizer: (html) => {
+      customHTMLSanitizer: (html) => {
         console.log("customHTMLSanitizer", html)
         return html.replace(/<span([^>]*)>/g, '<span$1>');
-      },*/
+      },
       customHTMLRenderer: {
         htmlBlock: {
           mention(node, next) {
@@ -334,7 +330,8 @@ export default {
         }
         case InputType.MENTION: {
           console.log(textarea.wwEditor);
-          textarea.setHTML(`<span class="mention">${content}</span><p></p>`);
+          textarea.setHTML(this.textarea.content + `<span class="mention">${content}</span>`);
+          // textarea.replaceSelection(`${content}`);
           break;
         }
         default: {
