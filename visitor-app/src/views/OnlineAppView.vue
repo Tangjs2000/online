@@ -64,6 +64,7 @@ import ChatTopicBar from "./chat/ChatTopicBar.vue";
 import ChatDialogBar from "./chat/ChatDialogBar.vue";
 import ChatBubbleBar from "./chat/ChatBubbleBar.vue";
 import ChatToolBar from "./chat/ChatToolBar.vue";
+import {Input, InputType} from "../stores/chat/RichTextInput";
 
 export default {
   name: "online-app",
@@ -141,7 +142,13 @@ export default {
     /* 撤回消息按钮处理事件-重新编辑 */
     reEdit(oldMessage) {
       this.initConfig.inputMode = InputMode.keyboard;
-      chatService.inputText(oldMessage, true);
+      let richTextInput = {
+        type: InputType.RICH_TEXT,
+        content: oldMessage,
+        extend: {}
+      }
+      chatService.inputText(richTextInput, true);
+      // chatService.inputText(oldMessage, true);
     },
 
     /**

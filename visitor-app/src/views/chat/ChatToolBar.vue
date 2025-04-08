@@ -69,6 +69,8 @@ import {TOOLBAR_INPUTBOX_TYPE} from "../../stores/chat/onlineAppConstant";
 import {pinyin} from 'pinyin-pro';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
+// import '@toast-ui/editor/dist/i18n/zh-cn.js';
+import {InputType} from "../../stores/chat/RichTextInput.ts"
 
 export default {
   name: "ChatToolBar",
@@ -153,10 +155,20 @@ export default {
       this.config.mention.show = false;
       let label = data.label;
       let value = data.value;
-      let aElement = document.createElement('mention')
+      /*let aElement = document.createElement('mention')
       aElement.innerText = '@' + label;
       aElement.href = value;
-      this.h5Input(aElement.outerHTML)
+      this.h5Input({
+        type: InputType.RICH_TEXT,
+        content: aElement.outerHTML,
+      }, false)*/
+      this.h5Input({
+        type: InputType.MENTION,
+        content: '@' + label,
+        extend: {
+          href: value
+        }
+      }, false)
     },
 
     /**
@@ -212,7 +224,9 @@ export default {
     'textarea.content': {
       deep: true,
       handler(newValue, oldValue) {
-        console.log(newValue)
+        if (!newValue) {
+          // this.textarea.instance. = '';
+        }
       }
     }
   },
@@ -221,18 +235,72 @@ export default {
     let that = this;
     const textarea = new Editor({
       el: document.getElementById('textarea'),
+      language: 'zh-CN',
       toolbarItems: [],
       hideModeSwitch: true,   // 隐藏模式切换
-      usageStatistics: false, // 禁用使用统计
+      usageStatistics: true, // 禁用使用统计
+      useDefaultHTMLSanitizer: false, // 禁用默认净化器
+      extendedAutolinks: true,
       minHeight: '36px',
       height: 'auto',
       initialEditType: 'wysiwyg', // markdown 或 wysiwyg
       previewStyle: 'vertical', // vertical编辑样式，还支持tab切换的形式
-      placeholder: '请输入您的问题,我来为您解答~',
+      placeholder: '请输入您的问题~',
       initialValue: that.textarea.content,
       events: {
         change: () => {
           that.textarea.content = textarea.getMarkdown() ? textarea.getHTML() : '';
+        },
+        keydown: (type, event) => {
+          const {code, shiftKey} = event;
+          /* 提及事件处理 */
+          if (shiftKey && 'Digit2' === code) this.mention()
+        }
+      },
+      hooks: {},
+      /*customHTMLSanitizer: (html) => {
+        console.log("customHTMLSanitizer", html)
+        return html.replace(/<span([^>]*)>/g, '<span$1>');
+      },*/
+      customHTMLRenderer: {
+        htmlBlock: {
+          mention(node, next) {
+            console.log(node, next)
+            const {attrs, childrenHTML} = node
+            return [
+              {type: 'openTag', tagName: 'span', attributes: attrs},
+              {type: 'html', content: childrenHTML},
+              {type: 'closeTag', tagName: 'span'}
+            ];
+          },
+          span(node, next) {
+            console.log(node, next)
+            const {attrs, childrenHTML} = node
+            return [
+              {type: 'openTag', tagName: 'span', attributes: attrs},
+              {type: 'html', content: childrenHTML},
+              {type: 'closeTag', tagName: 'span'}
+            ]
+          }
+        },
+        htmlInline: {
+          /*span(node, {entering}) {
+            console.log(node)
+            return {
+              type: entering ? 'openTag' : 'closeTag',
+              tagName: 'span',
+              attributes: node.attributes
+            };
+          }*/
+        }
+      },
+      /* 自定义净化规则 todo 不生效 */
+      sanitizer: {
+        tags: {
+          span: true
+        },
+        attributes: {
+          span: ['style', 'class', 'data-*']
         }
       }
     });
@@ -242,16 +310,36 @@ export default {
     /**
      * 输入内容
      */
-    window.globalInput = this.h5Input = (inputText, type) => {
+    window.globalInput = this.h5Input = (input, hasClear) => {
+      if (hasClear) this.inputClear();
       textarea.changeMode('wysiwyg');
-      // textarea.insertText(inputText)
-      if ('img' === type) {
-        textarea.exec('addImage', {
-          imageUrl: inputText,  // 图片URL（必需）
-          altText: '替代文本',           // 图片alt文本
-          width: '1.8rem',                // 图片宽度（可选）
-          height: '1.8rem',                // 图片高度（可选）
-        });
+      const {type, content, extend} = input
+      switch (type) {
+        case InputType.IMAGE: {
+          textarea.exec('addImage', {
+            imageUrl: content,  // 图片URL（必需）
+            altText: extend?.altText,  // 图片alt文本
+            width: extend?.style?.width || '1.8rem',    // 图片宽度（可选）
+            height: extend?.style?.height || '1.8rem',   // 图片高度（可选）
+          });
+          break;
+        }
+        case InputType.TEXT: {
+          textarea.insertText(content)
+          break;
+        }
+        case InputType.RICH_TEXT: {
+          textarea.insertText(content)
+          break;
+        }
+        case InputType.MENTION: {
+          console.log(textarea.wwEditor);
+          textarea.setHTML(`<span class="mention">${content}</span><p></p>`);
+          break;
+        }
+        default: {
+          console.log(`未知的type：${type}`)
+        }
       }
     }
     /**

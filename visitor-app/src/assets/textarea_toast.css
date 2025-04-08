@@ -4,15 +4,15 @@
 
 .toastui-editor-defaultUI .ProseMirror {
     padding: 0;
+    caret-color: #ff0000; /* 红色光标 */
 }
 
 .toastui-editor-ww-container {
-    padding: 0;
+
 }
 
 .toastui-editor-contents {
-    padding: 0;
-    font-size: 1.0rem; /* 设置默认字体大小 */
+    font-size: 1.1rem; /* 设置默认字体大小 */
     max-height: 100px;
 }
 

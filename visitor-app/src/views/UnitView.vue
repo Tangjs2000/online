@@ -28,8 +28,8 @@
       <!-- 广告位 -->
       <div class="ad-space">
         <button @click="console">输出</button>
-        <quill-rich-text-editor style="width: 1000px;height: 600px;"
-                                :value="richText.h5"/>
+<!--        <quill-rich-text-editor style="width: 1000px;height: 600px;"
+                                :value="richText.h5"/>-->
       </div>
       <!-- 版权位 -->
       <div class="oem-space">
@@ -59,7 +59,7 @@
 <script>
 import ChineseMoneyUnit from "./unit/ChineseMoneyUnit.vue";
 import WavTransferText from "./unit/WavTransferText.vue";
-import QuillRichTextEditor from "./unit/QuillRichTextEditor.vue";
+// import QuillRichTextEditor from "./unit/QuillRichTextEditor.vue";
 
 import("./unit-view.css")
 
@@ -77,7 +77,7 @@ const UNIT_NAME = {
 
 export default {
   name: "UnitView",
-  components: {WavTransferText, ChineseMoneyUnit, QuillRichTextEditor},
+  components: {WavTransferText, ChineseMoneyUnit},
   data() {
     return {
       UNIT_NAME: {

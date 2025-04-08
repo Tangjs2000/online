@@ -1,6 +1,7 @@
 import {initChat, chat} from './robot'
 import {bulid, chatMessageService, ChatMsgV2} from "./ChatMessage";
 import axios from "axios";
+import {Input, InputType} from "./RichTextInput";
 
 export interface Chat {
 
@@ -345,7 +346,18 @@ export class EmojiServiceImpl implements EmojiService {
                 element.contentEditable = 'false';
                 element.addEventListener("click", () => {
                     // chatService.inputText(element.outerHTML, false);
-                    chatService.inputText(element.src, 'img');
+                    let imageInput: Input = {
+                        type: InputType.IMAGE,
+                        content: element.src,
+                        extend: {
+                            altText: emojiName,
+                            style: {
+                                width: '1.8rem',
+                                height: '1.8rem',
+                            }
+                        }
+                    }
+                    chatService.inputText(imageInput, false);
                     // document.getElementById('textInput').blur();
                 })
                 emojiBody.appendChild(element);

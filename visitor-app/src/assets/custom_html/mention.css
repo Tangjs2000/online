@@ -1,4 +1,4 @@
-mention {
+.mention {
     /* 与a标签相似的默认样式 */
     color: #0366d6;
     text-decoration: none;
@@ -6,15 +6,15 @@ mention {
     display: inline;
 }
 
-mention:hover {
+.mention:hover {
     text-decoration: underline;
 }
 
-mention:active {
+.mention:active {
     color: #052b6c;
 }
 
-mention:focus {
+.mention:focus {
     outline: none;
     text-decoration: underline;
 }
