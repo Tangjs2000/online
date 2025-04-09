@@ -17,6 +17,7 @@ import {upload} from "../../stores/tool/CustomTool";
 import {h5ContentService, ResourceMode} from "../../stores/chat/H5ContentService";
 import {ChatScene, chatService} from "../../stores/chat/ChatV2";
 import {transferSeat} from "../../stores/chat/seat";
+import { toRaw } from 'vue';
 
 export default {
   name: "ChatUnitBox",
@@ -54,7 +55,7 @@ export default {
       let unitBar = document.getElementById(`unitBar`);
       unitBar.style.height = '35%';
       unitBar.style.maxHeight = '35%';
-      let personalEmoji = this.config.emoji;
+      let personalEmoji = toRaw(this.config.emoji);
       emojiService.initEmoji(personalEmoji);
     },
     showUnitTool() {

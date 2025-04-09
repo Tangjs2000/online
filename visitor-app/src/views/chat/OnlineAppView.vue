@@ -231,20 +231,22 @@ export default {
       await this.init();
       await gainBasicConfiguration()
           .then(result => {
-            that.ToolBar.emoji = {
-              "name": "custom_new240807",
-              "icon": "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
-              "content": [
-                {
-                  access_url: "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
-                  alt: "logo"
-                },
-                {
-                  access_url: "https://movies.smartalien.cn/live/CCTV1.png",
-                  alt: "CCTV1"
-                }
-              ],
-            }
+            that.ToolBar.emoji = [
+              {
+                "name": "custom_new240807",
+                "icon": "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
+                "content": [
+                  {
+                    access_url: "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
+                    alt: "logo"
+                  },
+                  {
+                    access_url: "https://movies.smartalien.cn/live/CCTV1.png",
+                    alt: "CCTV1"
+                  }
+                ],
+              }
+            ]
             that.ToolBar.unitTool = result?.unitTools;
           })
 
