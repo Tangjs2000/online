@@ -36,35 +36,35 @@
   </div>
 </template>
 
-<link rel="stylesheet" type="text/css" href="../assets/chat/online-app.css"/>
-<link rel="stylesheet" type="text/css" href="../assets/chat/wav-card.css"/>
-<link rel="stylesheet" type="text/css" href="../assets/chat/text-card.css"/>
-<link rel="stylesheet" type="text/css" href="../assets/chat/topic-bar.css"/>
-<link rel="stylesheet" type="text/css" href="../assets/chat/bubble-bar.css"/>
-<link rel="stylesheet" type="text/css" href="../assets/chat/tool-bar.css"/>
-<link rel="stylesheet" type="text/css" href="../assets/chat/file-card.css"/>
+<link rel="stylesheet" type="text/css" href="../../assets/chat/online-app.css"/>
+<link rel="stylesheet" type="text/css" href="../../assets/chat/wav-card.css"/>
+<link rel="stylesheet" type="text/css" href="../../assets/chat/text-card.css"/>
+<link rel="stylesheet" type="text/css" href="../../assets/chat/topic-bar.css"/>
+<link rel="stylesheet" type="text/css" href="../../assets/chat/bubble-bar.css"/>
+<link rel="stylesheet" type="text/css" href="../../assets/chat/tool-bar.css"/>
+<link rel="stylesheet" type="text/css" href="../../assets/chat/file-card.css"/>
 
 <script>
 
 import {formatDate, getRuntimeEnv, uuid} from "xijs"
-import {Basic} from "../stores/BasicConfigure";
-import {TOOLBAR_INPUTBOX_TYPE} from "../stores/chat/onlineAppConstant";
-import {scrollTopEventProcess, scrollButton, historyV2} from "../stores/chat/chat";
-import {initChat} from "../stores/chat/robot";
-import {transferSeat} from "../stores/chat/seat";
-import {gainFingerprint, upload} from "../stores/tool/CustomTool";
-import {gainBasicConfiguration} from "../stores/VisitorAPi";
-import {ChatMsgV2, bulid} from "../stores/chat/ChatMessage.ts";
-import {ChatMode, ChatRole, ChatScene, chatService, InputMode, UnitModule} from "../stores/chat/ChatV2";
-import {h5ContentService, ResourceMode} from "../stores/chat/H5ContentService";
-import {mic_open} from "../stores/chat/HoldToTalk";
-import CustomTextarea from "../components/customTextarea.vue";
+import {Basic} from "../../stores/BasicConfigure";
+import {TOOLBAR_INPUTBOX_TYPE} from "../../stores/chat/onlineAppConstant";
+import {scrollTopEventProcess, scrollButton, historyV2} from "../../stores/chat/chat";
+import {initChat} from "../../stores/chat/robot";
+import {transferSeat} from "../../stores/chat/seat";
+import {gainFingerprint, upload} from "../../stores/tool/CustomTool";
+import {gainBasicConfiguration} from "../../stores/VisitorAPi";
+import {ChatMsgV2, bulid} from "../../stores/chat/ChatMessage.ts";
+import {ChatMode, ChatRole, ChatScene, chatService, InputMode, UnitModule} from "../../stores/chat/ChatV2";
+import {h5ContentService, ResourceMode} from "../../stores/chat/H5ContentService";
+import {mic_open} from "../../stores/chat/HoldToTalk";
+import CustomTextarea from "../../components/customTextarea.vue";
 import Hammer from 'hammerjs';
-import ChatTopicBar from "./chat/ChatTopicBar.vue";
-import ChatDialogBar from "./chat/ChatDialogBar.vue";
-import ChatBubbleBar from "./chat/ChatBubbleBar.vue";
-import ChatToolBar from "./chat/ChatToolBar.vue";
-import {Input, InputType} from "../stores/chatV2/RichTextInput";
+import ChatTopicBar from "./ChatTopicBar.vue";
+import ChatDialogBar from "./ChatDialogBar.vue";
+import ChatBubbleBar from "./ChatBubbleBar.vue";
+import ChatToolBar from "./ChatToolBar.vue";
+import {Input, InputType} from "../../stores/chatV2/RichTextInput";
 
 export default {
   name: "online-app",
@@ -405,16 +405,16 @@ export default {
 </script>
 
 <style>
-@import url(../assets/chat/online-app.css);
-@import url(../assets/chat/wav-card.css);
-@import url(../assets/chat/richText-card.css);
-@import url(../assets/chat/topic-bar.css);
-@import url(../assets/chat/bubble-bar.css);
-@import url(../assets/chat/tool-bar.css);
-@import url(../assets/chat/file-card.css);
-@import url(../assets/chat/menu-card.css);
-@import url(../assets/chat/emoji.css);
-@import url(../assets/chat/hold-talk.css);
-@import url(../assets/chat/media-mask.css);
+@import url(../../assets/chat/online-app.css);
+@import url(../../assets/chat/wav-card.css);
+@import url(../../assets/chat/richText-card.css);
+@import url(../../assets/chat/topic-bar.css);
+@import url(../../assets/chat/bubble-bar.css);
+@import url(../../assets/chat/tool-bar.css);
+@import url(../../assets/chat/file-card.css);
+@import url(../../assets/chat/menu-card.css);
+@import url(../../assets/chat/emoji.css);
+@import url(../../assets/chat/hold-talk.css);
+@import url(../../assets/chat/media-mask.css);
 /*@import url(../assets/chat/text-card.css);*/
 </style>

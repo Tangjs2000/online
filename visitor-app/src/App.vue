@@ -8,7 +8,7 @@
 
 <script>
 import UnitView from "./views/UnitView.vue";
-import OnlineAppView from "./views/OnlineAppView.vue";
+import OnlineAppView from "./views/chat/OnlineAppView.vue";
 import router from './router';
 import VideoChatView from "./views/VideoChatView.vue";
 

@@ -1,5 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import OnlineAppView from '../views/OnlineAppView.vue'
+import OnlineAppView from '../views/chat/OnlineAppView.vue'
 import UnitView from '../views/UnitView.vue'
 import VideoChatView from '../views/VideoChatView.vue'
 
@@ -15,7 +15,7 @@ const router = createRouter({
             path: '/chat',
             name: 'online',
             meta: {title: '在线客服'},
-            component: () => import("../views/OnlineAppView.vue")
+            component: () => import("../views/chat/OnlineAppView.vue")
         },
         {
             path: '/unit-view',
