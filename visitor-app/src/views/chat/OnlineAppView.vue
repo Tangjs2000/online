@@ -28,7 +28,7 @@
         <!-- 气泡栏 -->
         <chat-bubble-bar v-model:bubble="Basic.bubble"/>
         <!-- 工具栏 -->
-        <chat-tool-bar @send="sendMessage"/>
+        <chat-tool-bar @send="sendMessage" v-model="ToolBar"/>
       </div>
       <!-- 信息栏 -->
       <div id="informationBox" v-if="initConfig.informationBox.show" class="informationBox"></div>
@@ -48,7 +48,6 @@
 
 import {formatDate, getRuntimeEnv, uuid} from "xijs"
 import {Basic} from "../../stores/BasicConfigure";
-import {TOOLBAR_INPUTBOX_TYPE} from "../../stores/chat/onlineAppConstant";
 import {scrollTopEventProcess, scrollButton, historyV2} from "../../stores/chat/chat";
 import {initChat} from "../../stores/chat/robot";
 import {transferSeat} from "../../stores/chat/seat";
@@ -72,7 +71,6 @@ export default {
   data() {
     return {
       Basic,
-      TOOLBAR_INPUTBOX_TYPE,
       initConfig: {
         unitModule: undefined,
         own: 123456,
@@ -83,6 +81,7 @@ export default {
           show: false,
         }
       },
+      ToolBar: {},
       inputText: '',
       textInputBox: document.getElementById(`textInput`),
       dialogMsg: [],
@@ -228,64 +227,31 @@ export default {
     async initBasicConfiguration() {
       let that = this;
       /* 1、请求接口获取基础配置 */
-      let bubbles = null;
       let isRobotPriority = false;
-      let unitTools = null;
       await this.init();
       await gainBasicConfiguration()
           .then(result => {
-            // bubbles = result?.bubbles;
-            unitTools = result?.unitTools;
+            that.ToolBar.emoji = {
+              "name": "custom_new240807",
+              "icon": "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
+              "content": [
+                {
+                  access_url: "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
+                  alt: "logo"
+                },
+                {
+                  access_url: "https://movies.smartalien.cn/live/CCTV1.png",
+                  alt: "CCTV1"
+                }
+              ],
+            }
+            that.ToolBar.unitTool = result?.unitTools;
           })
 
       /* 2、动态初始化浏览器页签logo和标题 todo 移至到对应组件 */
       /* 3、初始化气泡栏|胶囊栏 todo 移至到对应组件 */
-      /*setInterval(() => {
-        let content = []
-        for (let i = 0; i < 8; i++) {
-          content.push("测试问题" + Math.ceil(Math.random() * 1000))
-        }
-        that.Basic.bubble = {
-          show: false,
-          content
-        };
-      }, 5000)*/
-
-      /* 4、初始化工具单元栏 */
-      if (unitTools && unitTools.length > 0) {
-        let extendUnit = document.getElementById(`extendUnit`);
-        for (let i = 0; i < Math.min(unitTools.length, 8); i++) {
-          let unitTool = unitTools[i];
-          let unitToolDiv = document.createElement(`div`);
-          let unitToolButton = document.createElement(`button`);
-          let unitToolP = document.createElement(`p`);
-          unitToolDiv.id = unitTool.id;
-          if (unitTool.h5_icon) {
-            unitToolButton.innerHTML = unitTool.h5_icon;
-          } else {
-            let img = document.createElement(`img`);
-            img.src = unitTool.h5_icon_url
-            unitToolButton.appendChild(img);
-          }
-          unitToolP.innerText = unitTool.title;
-          unitToolDiv.classList.add(`unit`);
-          unitToolDiv.addEventListener(`click`, function () {
-            console.log(unitTool.event);
-            that.callSystemUnit(unitTool.event);
-          })
-          unitToolDiv.append(unitToolButton);
-          unitToolDiv.append(unitToolP);
-          extendUnit.append(unitToolDiv);
-        }
-      }
-
-      /* 4、初始化查看历史消息按钮事件 */
-      /* 4.1、查看历史消息按钮事件 */
-      let gainHistoryChatButton = document.getElementById(`gainHistoryChat`);
-      gainHistoryChatButton.addEventListener(`click`, historyV2);
-      /* 4.2、滑动事件监听(作用同上：滚动到顶处理获取历史消息) */
-      let dialogMsgBar = document.getElementById(`dialogMsgBar`);
-      dialogMsgBar.addEventListener(`scroll`, scrollTopEventProcess);
+      /* 4、初始化工具单元栏 todo 移至到对应组件 */
+      /* 4、初始化查看历史消息按钮事件 todo 移至到对应组件 */
 
       /* 5、判断是否机器人优先接入 */
       if (isRobotPriority) {
@@ -306,89 +272,6 @@ export default {
 
       /* 6、坐席接入 */
       // transferSeat();
-
-    },
-    /**
-     * 调用系统单元
-     *
-     * @param event 单元事件
-     */
-    callSystemUnit: function (event) {
-      switch (event) {
-        case "album": {
-          /* 1、创建虚拟文件输入document元素 */
-          let fileInput = document.createElement(`input`);
-          fileInput.id = "file-input";
-          fileInput.type = "file"
-          fileInput.accept = "image/*"
-          fileInput.multiple = true
-          fileInput.capture = true
-          fileInput.click();
-          break;
-        }
-        case "camera": {
-          break;
-        }
-        case "videoChat": {
-          this.$router.push({name: 'videoChat'})
-          break;
-        }
-        case "file": {
-          /* 1、创建虚拟文件输入document元素 */
-          let fileInput = document.createElement(`input`);
-          fileInput.type = "file"
-          // fileInput.accept = ".jpg,.jpeg,.png"
-          fileInput.accept = "*"
-          fileInput.click();
-
-          /* 2、监听文件输入document元素文件上传事件 */
-          fileInput.addEventListener("change", function (event) {
-            let files = event.target.files;
-            if (files && files.length > 0) {
-              for (const file of files) {
-                upload(file).then(fileInfo => {
-                  let element = h5ContentService.builder()
-                      .resourceMode(ResourceMode.picture)
-                      .parse("." + fileInfo.fileSuffix)
-                      .resourceUri(fileInfo.accessUrl)
-                      .build();
-                  let contentH5 = element.outerHTML;
-                  console.log(contentH5);
-                  chatService.sendRichText(contentH5, ChatScene.robot);
-                  /*msgProcess(CHAT_CONSTANT.inputType.file,
-                      null, fileInfo.accessUrl, 0, fileInfo);*/
-                });
-              }
-            }
-          })
-          break;
-        }
-        case "toManual": {
-          transferSeat();
-          break;
-        }
-        case"position": {
-          if ("geolocation" in navigator) {
-            // geolocation is available
-            navigator.geolocation.getCurrentPosition(function (position) {
-              console.log("Latitude is :", position.coords.latitude);
-              console.log("Longitude is :", position.coords.longitude);
-            }, function (error) {
-              console.error("Error Code = " + error.code + " - " + error.message);
-            });
-          } else {
-            // geolocation is not supported
-            console.log("Geolocation is not supported by this browser.");
-          }
-          break;
-        }
-        case 'scan': {
-
-        }
-        default: {
-          console.log("调用未知的处理单元");
-        }
-      }
     },
     playWavPage(msgId, url) {
       chatService.playWav(msgId, url);

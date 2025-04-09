@@ -36,17 +36,17 @@
       <img src="/public/svg/unit_extend.svg">
     </i>
   </div>
-  <!--  <chat-unit-box v-model="config.unitModule"></chat-unit-box>-->
-  <div v-show="config.unitModule" id="unitBar" class="unitBar">
-    <div v-show="config.unitModule === `extend`" id="extendUnit" class="extendUnit"></div>
-    <div v-show="config.unitModule === `emoji`" id="emojiUnit" class="emojiUnit">
-      <div id="emojiTab" class="emojiTab"></div>
-      <div class="emojiContent">
-        <div id="emojiBody" class="emojiBody"></div>
-        <div id="emojiBody-backspace" class="emojiBody-backspace" @click="this.inputClear()"></div>
+  <chat-unit-box ref="unitBox" :show-module="config.unitModule" :config="this.modelValue"></chat-unit-box>
+  <!--  <div v-show="config.unitModule" id="unitBar" class="unitBar">
+      <div v-show="config.unitModule === `extend`" id="extendUnit" class="extendUnit"></div>
+      <div v-show="config.unitModule === `emoji`" id="emojiUnit" class="emojiUnit">
+        <div id="emojiTab" class="emojiTab"></div>
+        <div class="emojiContent">
+          <div id="emojiBody" class="emojiBody"></div>
+          <div id="emojiBody-backspace" class="emojiBody-backspace" @click="this.inputClear()"></div>
+        </div>
       </div>
-    </div>
-  </div>
+    </div>-->
 
   <t-popup v-model="config.mention.show" placement="bottom" style="height: 70%">
     <t-indexes :index-list="config.mention.indexes">
@@ -63,11 +63,9 @@
 
 <script>
 import {InputMode, UnitModule} from "../../stores/chat/ChatV2";
-import {emojiService} from "../../stores/chatV2/EmojiService.ts";
 import {mic_open} from "../../stores/chat/HoldToTalk";
 import {scrollButton} from "../../stores/chat/chat";
 import CustomTextarea from "../../components/customTextarea.vue";
-import {TOOLBAR_INPUTBOX_TYPE} from "../../stores/chat/onlineAppConstant";
 import {pinyin} from 'pinyin-pro';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -85,7 +83,7 @@ export default {
           inputMode: `keyboard`,
           inputBoxType: `text`,
           inputText: ``,
-          emojiTab: `default`
+          emoji: []
         }
       }
     }
@@ -93,7 +91,6 @@ export default {
   emits: ['send'],
   data() {
     return {
-      TOOLBAR_INPUTBOX_TYPE,
       config: {
         inputMode: `keyboard`,
         inputBoxType: `text`,
@@ -110,6 +107,10 @@ export default {
         content: '',
         mentions: [],
       },
+      toolbar: {
+        emoji: [],
+        unitTool: []
+      }
     }
   },
   methods: {
@@ -190,35 +191,13 @@ export default {
           this.config.inputMode = InputMode.keyboard;
           break;
         }
-          /* 展示组件|表情包 */
         case UnitModule.extend: {
-          let unitBar = document.getElementById(`unitBar`);
-          unitBar.style.height = '170px';
-          unitBar.style.maxHeight = '170px';
+          /* 展示组件 */
           this.config.unitModule = UnitModule.extend
           break;
         }
         case UnitModule.emoji: {
-          let unitBar = document.getElementById(`unitBar`);
-          unitBar.style.height = '35%';
-          unitBar.style.maxHeight = '35%';
-          let personalEmoji = [
-            {
-              "name": "custom_new240807",
-              "icon": "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
-              "content": [
-                {
-                  access_url: "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
-                  alt: "logo"
-                },
-                {
-                  access_url: "https://movies.smartalien.cn/live/CCTV1.png",
-                  alt: "CCTV1"
-                }
-              ],
-            },
-          ]
-          emojiService.initEmoji(personalEmoji);
+          /* 展示表情包 */
           this.config.unitModule = UnitModule.emoji
           break;
         }
@@ -365,7 +344,6 @@ export default {
       this.textarea.content = '';
       textarea.setHTML(this.textarea.content);
     }
-
   }
 }
 </script>

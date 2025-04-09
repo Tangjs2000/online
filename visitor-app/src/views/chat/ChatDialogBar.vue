@@ -38,6 +38,7 @@
 
 <script>
 import {SoundIcon, CloseIcon} from 'tdesign-icons-vue-next';
+import {historyV2, scrollTopEventProcess} from "../../stores/chat/chat";
 
 export default {
   name: "ChatDialogBar",
@@ -102,6 +103,14 @@ export default {
     revoke(mid) {
       this.$emit('revoke', mid);
     }
+  },
+  mounted() {
+    /* 1、查看历史消息按钮事件 */
+    let gainHistoryChatButton = document.getElementById(`gainHistoryChat`);
+    gainHistoryChatButton.addEventListener(`click`, historyV2);
+    /* 2、滑动事件监听(作用同上：滚动到顶处理获取历史消息) */
+    let dialogMsgBar = document.getElementById(`dialogMsgBar`);
+    dialogMsgBar.addEventListener(`scroll`, scrollTopEventProcess);
   }
 }
 </script>
