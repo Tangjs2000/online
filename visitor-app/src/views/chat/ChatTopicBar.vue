@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import {Basic} from "../../stores/BasicConfigure";
 
 export default {
   name: "ChatTopicBar",

@@ -49,7 +49,7 @@ export default {
     }
   },
   mounted() {
-    this.emoji.show = this.config.unitModule === "emoji";
+
   }
 }
 </script>

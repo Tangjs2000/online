@@ -1,4 +1,4 @@
-import {Input, InputType} from "../chat/RichTextInput";
+import {Input, InputType} from "./RichTextInput";
 import {chatService} from "../chat/ChatV2";
 
 /**
@@ -24,7 +24,7 @@ export interface EmojiService {
 
 export class EmojiServiceImpl implements EmojiService {
     /* 初始化表情包 */
-    initEmoji() {
+    initEmoji(personalEmoji) {
         /* 清除表情包选项卡 */
         let emojiTabDiv = document.getElementById(`emojiTab`);
         while (emojiTabDiv.firstChild) {
@@ -33,23 +33,19 @@ export class EmojiServiceImpl implements EmojiService {
         /* 初始化表情包选项卡 */
         const emojiTabs = [
             {"type": EmojiTab.search, "name": "search", "icon": "/emoji/group_search.svg"},
-            {"type": EmojiTab.default, "name": "default", "icon": "/emoji/group_default.svg"},
-            {
-                "type": EmojiTab.custom,
-                "name": "custom_new240807",
-                "icon": "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
-                "content": [
-                    {
-                        access_url: "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
-                        alt: "logo"
-                    },
-                    {
-                        access_url: "https://movies.smartalien.cn/live/CCTV1.png",
-                        alt: "CCTV1"
-                    }
-                ],
-            },
+            {"type": EmojiTab.default, "name": "default", "icon": "/emoji/group_default.svg"}
         ];
+        if (personalEmoji?.length > 0) {
+            personalEmoji.forEach(item => {
+                emojiTabs.push({
+                    "type": EmojiTab.custom,
+                    "name": item.name,
+                    "icon": item.icon,
+                    "content": item.content
+                })
+            })
+
+        }
         if (emojiTabs?.length > 0) {
             let that = this;
             for (let item of emojiTabs) {
@@ -60,6 +56,9 @@ export class EmojiServiceImpl implements EmojiService {
                     that.emojiTabSwitch(item)
                 })
                 emojiTabDiv.appendChild(emojiTab);
+                if (item.type === EmojiTab.default) {
+                    emojiTab.click();
+                }
             }
         }
     }
@@ -83,8 +82,6 @@ export class EmojiServiceImpl implements EmojiService {
             for (let emoji of emojiTab.content) {
                 let element = document.createElement(`img`)
                 element.src = emoji.access_url;
-                element.width = 34;
-                element.height = 34;
                 element.alt = emoji.alt;
                 element.contentEditable = 'false';
                 element.addEventListener("click", () => {
@@ -92,11 +89,7 @@ export class EmojiServiceImpl implements EmojiService {
                         type: InputType.IMAGE,
                         content: element.src,
                         extend: {
-                            altText: element.alt,
-                            style: {
-                                width: '1.8rem',
-                                height: '1.8rem',
-                            }
+                            altText: element.alt
                         }
                     }
                     chatService.inputText(imageInput, false);

@@ -1,7 +1,7 @@
 import {initChat, chat} from './robot'
 import {bulid, chatMessageService, ChatMsgV2} from "./ChatMessage";
 import axios from "axios";
-import {Input, InputType} from "./RichTextInput";
+import {Input, InputType} from "../chatV2/RichTextInput";
 
 export interface Chat {
 

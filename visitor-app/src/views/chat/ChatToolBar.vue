@@ -71,7 +71,7 @@ import {TOOLBAR_INPUTBOX_TYPE} from "../../stores/chat/onlineAppConstant";
 import {pinyin} from 'pinyin-pro';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import {InputType} from "../../stores/chat/RichTextInput.ts"
+import {InputType} from "../../stores/chatV2/RichTextInput.ts"
 import ChatUnitBox from "./ChatUnitBox.vue";
 
 export default {
@@ -200,9 +200,25 @@ export default {
         }
         case UnitModule.emoji: {
           let unitBar = document.getElementById(`unitBar`);
-          unitBar.style.height = '190px';
-          unitBar.style.maxHeight = '190px';
-          emojiService.initEmoji();
+          unitBar.style.height = '35%';
+          unitBar.style.maxHeight = '35%';
+          let personalEmoji = [
+            {
+              "name": "custom_new240807",
+              "icon": "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
+              "content": [
+                {
+                  access_url: "https://movies.smartalien.cn/assets/logo-DWb-DfrG.svg",
+                  alt: "logo"
+                },
+                {
+                  access_url: "https://movies.smartalien.cn/live/CCTV1.png",
+                  alt: "CCTV1"
+                }
+              ],
+            },
+          ]
+          emojiService.initEmoji(personalEmoji);
           this.config.unitModule = UnitModule.emoji
           break;
         }

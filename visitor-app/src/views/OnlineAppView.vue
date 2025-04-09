@@ -64,7 +64,7 @@ import ChatTopicBar from "./chat/ChatTopicBar.vue";
 import ChatDialogBar from "./chat/ChatDialogBar.vue";
 import ChatBubbleBar from "./chat/ChatBubbleBar.vue";
 import ChatToolBar from "./chat/ChatToolBar.vue";
-import {Input, InputType} from "../stores/chat/RichTextInput";
+import {Input, InputType} from "../stores/chatV2/RichTextInput";
 
 export default {
   name: "online-app",
