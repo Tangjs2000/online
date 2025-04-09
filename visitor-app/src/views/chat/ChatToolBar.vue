@@ -36,6 +36,7 @@
       <img src="/public/svg/unit_extend.svg">
     </i>
   </div>
+  <!--  <chat-unit-box v-model="config.unitModule"></chat-unit-box>-->
   <div v-show="config.unitModule" id="unitBar" class="unitBar">
     <div v-show="config.unitModule === `extend`" id="extendUnit" class="extendUnit"></div>
     <div v-show="config.unitModule === `emoji`" id="emojiUnit" class="emojiUnit">
@@ -61,7 +62,8 @@
 </template>
 
 <script>
-import {emojiService, InputMode, UnitModule} from "../../stores/chat/ChatV2";
+import {InputMode, UnitModule} from "../../stores/chat/ChatV2";
+import {emojiService} from "../../stores/chatV2/EmojiService.ts";
 import {mic_open} from "../../stores/chat/HoldToTalk";
 import {scrollButton} from "../../stores/chat/chat";
 import CustomTextarea from "../../components/customTextarea.vue";
@@ -70,10 +72,11 @@ import {pinyin} from 'pinyin-pro';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import {InputType} from "../../stores/chat/RichTextInput.ts"
+import ChatUnitBox from "./ChatUnitBox.vue";
 
 export default {
   name: "ChatToolBar",
-  components: {CustomTextarea},
+  components: {ChatUnitBox, CustomTextarea},
   props: {
     modelValue: {
       type: Object,

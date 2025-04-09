@@ -1,3 +1,7 @@
+:root {
+    --emoji-card-columns: 8
+}
+
 .emojiUnit {
     width: 100%;
     height: 100%;
@@ -46,7 +50,7 @@
 .emojiBody {
     /* 响应式布局 */
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(var(--emoji-card-columns, 8), 1fr);
     gap: 10px;
     justify-items: center;
     align-items: center;
@@ -71,8 +75,10 @@
 }
 
 .emojiBody img {
-    width: 34px;
-    height: 34px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    overflow: hidden;
 }
 
 .emojiBody img:hover {

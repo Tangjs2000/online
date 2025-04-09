@@ -23,6 +23,10 @@ const API = {
     destroy: {  // 销毁会话
         url: "/online/robot/destroy",
         method: "POST"
+    },
+    ai: {   // ai对话
+        url: "/ai/robot/chat",
+        method: "POST"
     }
 }
 

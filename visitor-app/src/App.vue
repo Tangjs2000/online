@@ -3,13 +3,11 @@
   <!--  <online-app-view/>-->
   <!--  <video-chat-view />-->
   <!--  <unit-view/>-->
-  <!--  <test/>-->
 </template>
 
 
 <script>
 import UnitView from "./views/UnitView.vue";
-import test from "./views/test.vue";
 import OnlineAppView from "./views/OnlineAppView.vue";
 import router from './router';
 import VideoChatView from "./views/VideoChatView.vue";
@@ -20,7 +18,6 @@ export default {
     VideoChatView,
     UnitView,
     OnlineAppView,
-    test
   },
   router,
   name: "App"

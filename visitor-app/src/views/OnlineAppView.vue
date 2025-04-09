@@ -55,7 +55,7 @@ import {transferSeat} from "../stores/chat/seat";
 import {gainFingerprint, upload} from "../stores/tool/CustomTool";
 import {gainBasicConfiguration} from "../stores/VisitorAPi";
 import {ChatMsgV2, bulid} from "../stores/chat/ChatMessage.ts";
-import {ChatMode, ChatRole, ChatScene, chatService, emojiService, InputMode, UnitModule} from "../stores/chat/ChatV2";
+import {ChatMode, ChatRole, ChatScene, chatService, InputMode, UnitModule} from "../stores/chat/ChatV2";
 import {h5ContentService, ResourceMode} from "../stores/chat/H5ContentService";
 import {mic_open} from "../stores/chat/HoldToTalk";
 import CustomTextarea from "../components/customTextarea.vue";
@@ -148,7 +148,6 @@ export default {
         extend: {}
       }
       chatService.inputText(richTextInput, true);
-      // chatService.inputText(oldMessage, true);
     },
 
     /**
@@ -204,41 +203,25 @@ export default {
         root.style.setProperty('--message-card-width-scale', 0.75);
       }
 
-      /* 2、初始化页面配置 */
-      /*let textInput = document.getElementById("textInput");
-      textInput.addEventListener('click', () => {
-        /!* 输入框获取焦点事件 *!/
-        textInput.focus()
-      });
-      textInput.addEventListener('focus', () => {
-        /!* 关闭组件显示 *!/
-        this.initConfig.unitModule = undefined;
-      })
-      textInput.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter') { // 或者使用 event.keyCode === 13，但不建议，因为keyCode已废弃
-          event.preventDefault(); // 阻止默认的回车行为（例如提交表单）
-          // 调用与按钮点击相同的事件处理程序
-          // 这将触发按钮的click事件
-          let sendButton = document.getElementById("sendButton");
-          sendButton.click();
-        } else if (event.keyCode === 229) {
-          // 判断是否为输入法弹出键
-          // 阻止默认行为，即阻止输入法弹出
-          event.preventDefault();
-        }
-      });*/
-
-      /* 生成个人信息 */
-      let historyUserinfo = localStorage.getItem(`userinfo`);
-      let deviceId = await gainFingerprint();
-      let userinfo = {
-        userId: deviceId,
-        meetingId: uuid(20),
-        initDatetime: formatDate(Date.now(), 'YY-MM-DD hh:mm:ss')
+      const urlParams = new URLSearchParams(window.location.search)
+      /* 2、初始化渠道信息 */
+      let channel = urlParams?.get('channel');
+      if (!channel) {
+        channel = "88888888"
       }
-      localStorage.setItem("userinfo", JSON.stringify(userinfo));
+      /* 2、初始化页面配置 */
+      /* 3、初始化个人信息 */
+      const phone = urlParams?.get('phone');
+      const userid = urlParams?.get('userid');
+      const hisUserid = await this.$globalStorage.gainPersonal('userid', null)
+      await this.$globalStorage.setPersonal('userid', userid || phone || hisUserid || await gainFingerprint())
+      /* 4、初始化会话信息 */
+      let hasNewMeet = true;
+      if (hasNewMeet) {
+        await this.$globalStorage.setPersonal('meetingId', uuid(20))
+        await this.$globalStorage.setPersonal('initDatetime', formatDate(Date.now(), 'YY-MM-DD hh:mm:ss'))
+      }
     },
-
     /**
      * 初始化基础配置
      */
@@ -246,7 +229,7 @@ export default {
       let that = this;
       /* 1、请求接口获取基础配置 */
       let bubbles = null;
-      let isRobotPriority = true;
+      let isRobotPriority = false;
       let unitTools = null;
       await this.init();
       await gainBasicConfiguration()
@@ -414,18 +397,9 @@ export default {
   },
   watch: {},
   mounted: function () {
-    let that = this;
-
-    /*const vConsole = new VConsole();
-    vConsole.show();*/
-    // this.scrollListen();
-    // this.init();
-    // this.loadCoverPage();
-
     /* 初始化基础配置 */
     this.Basic = Basic;
     this.initBasicConfiguration();
-    let fileCardMsg = document.getElementById("fileCardMsg");
   }
 }
 </script>

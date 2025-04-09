@@ -48,7 +48,7 @@ export default defineConfig({
     server: {
         open: true,         // 编译后直接打开浏览器
         host: "localhost",  // 域名主机
-        port: 9527,         // 端口
+        port: 9528,         // 端口
         https: false,       // 是否https
         overlay: {          // 显示警告和错误
             warnings: false,
